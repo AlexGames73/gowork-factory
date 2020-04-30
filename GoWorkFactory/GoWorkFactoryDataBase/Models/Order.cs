@@ -5,14 +5,16 @@ using System.Text;
 
 namespace GoWorkFactoryDataBase.Models
 {
-    public class Request
+    public class Order
     {
         public int Id { get; set; }
         public int UserId { get; set; }
         public virtual User User { get; set; }
-        public DateTime Date { get; set; }
-        
-        [ForeignKey("RequestId")]
-        public virtual List<MaterialRequest> MaterialRequests { get; set; }
+        public string SerialNumber { get; set; }
+        public DateTime DeliveryDate { get; set; }
+        public string DeliveryAddress { get; set; }
+
+        [ForeignKey("OrderId")]
+        public virtual List<ProductOrder> ProductOrders { get; set; }
     }
 }

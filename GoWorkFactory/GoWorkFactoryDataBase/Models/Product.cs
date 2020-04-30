@@ -12,6 +12,8 @@ namespace GoWorkFactoryDataBase.Models
         public int Price { get; set; }
 
         [ForeignKey("ProductId")]
-        public List<MaterialProduct> MaterialProducts { get; set; }
+        public virtual List<MaterialProduct> MaterialProducts { get; set; }
+        [ForeignKey("ProductId")]
+        public virtual List<ProductOrder> ProductOrders { get; set; }
     }
 }

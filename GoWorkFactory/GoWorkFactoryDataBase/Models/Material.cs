@@ -12,9 +12,9 @@ namespace GoWorkFactoryDataBase.Models
         public int Count { get; set; }
 
         [ForeignKey("MaterialId")]
-        public List<MaterialProduct> MaterialProducts { get; set; }
+        public virtual List<MaterialProduct> MaterialProducts { get; set; }
 
         [ForeignKey("MaterialId")]
-        public List<MaterialRequest> MaterialRequests { get; set; }
+        public virtual List<MaterialRequest> MaterialRequests { get; set; }
     }
 }

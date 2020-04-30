@@ -20,7 +20,10 @@ namespace GoWorkFactoryDataBase
         public virtual DbSet<Material> Materials { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Request> Requests { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<MaterialProduct> MaterialProducts { get; set; }
         public virtual DbSet<MaterialRequest> MaterialRequests { get; set; }
+        public virtual DbSet<ProductOrder> ProductOrders { get; set; }
     }
 }
