@@ -13,4 +13,8 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GoWorkFactoryBusinessLogic\GoWorkFactoryBusinessLogic.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -56,7 +56,7 @@ namespace GoWorkFactoryDataBase.Implementations
                    Id = rec.Id,
                    NameProduct = rec.Name,
                    CostProduct = rec.Price,
-                   materials = context.MaterialProducts
+                   Materials = context.MaterialProducts
                 .Include(recPC => recPC.Material)
                 .Where(recPC => recPC.ProductId == rec.Id)
                 .ToDictionary(recPC => recPC.MaterialId, recPC =>

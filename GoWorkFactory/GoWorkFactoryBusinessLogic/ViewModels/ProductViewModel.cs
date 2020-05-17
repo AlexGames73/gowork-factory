@@ -14,6 +14,6 @@ namespace GoWorkFactoryBusinessLogic.ViewModels
 
         [DisplayName("Стоимость продукта")]
         public int CostProduct { get; set; }
-        public Dictionary<int, (string, int)> materials { get; set; }
+        public Dictionary<int, (string, int)> Materials { get; set; }
     }
 }
