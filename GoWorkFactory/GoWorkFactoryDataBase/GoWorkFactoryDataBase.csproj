@@ -13,4 +13,8 @@
     <ProjectReference Include="..\GoWorkFactoryBusinessLogic\GoWorkFactoryBusinessLogic.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GoWorkFactoryBusinessLogic\GoWorkFactoryBusinessLogic.csproj" />
+  </ItemGroup>
+
 </Project>
