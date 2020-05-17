@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GoWorkFactoryDataBase.Enums
+namespace GoWorkFactoryBusinessLogic.Enums
 {
     public enum UserRole
     {
