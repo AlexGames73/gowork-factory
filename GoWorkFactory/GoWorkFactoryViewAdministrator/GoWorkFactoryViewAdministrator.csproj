@@ -79,6 +79,12 @@
     <Compile Include="Forms\ProductMainForm.Designer.cs">
       <DependentUpon>ProductMainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ProductMaterialForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ProductMaterialForm.Designer.cs">
+      <DependentUpon>ProductMaterialForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SettingProductForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -97,6 +103,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ProductMainForm.resx">
       <DependentUpon>ProductMainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ProductMaterialForm.resx">
+      <DependentUpon>ProductMaterialForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SettingProductForm.resx">
       <DependentUpon>SettingProductForm.cs</DependentUpon>
@@ -123,6 +132,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GoWorkFactoryBusinessLogic\GoWorkFactoryBusinessLogic.csproj">
+      <Project>{2D1AF772-588C-4A9D-BBE0-B14D3FDA09B7}</Project>
+      <Name>GoWorkFactoryBusinessLogic</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
