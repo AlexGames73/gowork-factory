@@ -9,7 +9,7 @@ namespace GoWorkFactoryDataBase
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseNpgsql(@"Host=localhost;Port=5432;Database=GoWorkFactory;Username=postgres;Password=postgres");
+                optionsBuilder.UseNpgsql(@"Host=localhost;Port=5432;Database=GoWorkFactory;Username=postgres;Password=postgres", o => o.SetPostgresVersion(9, 6));
             }
             base.OnConfiguring(optionsBuilder);
         }

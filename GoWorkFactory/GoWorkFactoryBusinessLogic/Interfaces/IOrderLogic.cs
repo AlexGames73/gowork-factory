@@ -7,5 +7,7 @@ namespace GoWorkFactoryBusinessLogic.Interfaces
     {
         void AddProduct(ChangeProductOrderBindingModel model);
         void RemoveProduct(ChangeProductOrderBindingModel model);
+
+        void ReservationOrder(ReservationBindingModel model);
     }
 }

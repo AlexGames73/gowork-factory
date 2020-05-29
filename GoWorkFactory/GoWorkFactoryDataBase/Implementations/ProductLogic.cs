@@ -12,7 +12,7 @@ namespace GoWorkFactoryDataBase.Implementations
 {
     public class ProductLogic : IProductLogic
     {
-        public void Create(ProductBindingModel model)
+        public void CreateOrUpdate(ProductBindingModel model)
         {
             using (var context = new GoWorkFactoryDataBaseContext())
             {

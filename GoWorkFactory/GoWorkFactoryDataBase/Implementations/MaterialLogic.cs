@@ -10,7 +10,7 @@ namespace GoWorkFactoryDataBase.Implementations
 {
     public class MaterialLogic : IMaterialLogic
     {
-        public void Create(MaterialBindingModel model)
+        public void CreateOrUpdate(MaterialBindingModel model)
         {
             using (var context = new GoWorkFactoryDataBaseContext())
             {
