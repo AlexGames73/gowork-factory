@@ -7,7 +7,6 @@
         public virtual Request Request { get; set; }
         public int MaterialId { get; set; }
         public virtual Material Material { get; set; }
-        public int MaterialAmount { get; set; }
         public int Count { get; set; }
         public int Price { get; set; }
     }

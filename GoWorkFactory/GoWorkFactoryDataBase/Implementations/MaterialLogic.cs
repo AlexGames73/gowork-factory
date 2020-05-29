@@ -10,21 +10,36 @@ namespace GoWorkFactoryDataBase.Implementations
 {
     public class MaterialLogic : IMaterialLogic
     {
-        public void Create(MaterialBindingModel model)
+
+        public void CreateOrUpdate(MaterialBindingModel model)
         {
             using (var context = new GoWorkFactoryDataBaseContext())
             {
-                if (context.Materials.FirstOrDefault(x => x.Name == model.NameMaterial) != null)
+                Material element = new Material();
+                if (model.Id.HasValue)
                 {
-                    throw new Exception("Уже есть изделие с таким названием");
+                    element = context.Materials.FirstOrDefault(rec => rec.Id == model.Id);
+
+                    if (element == null)
+                    {
+                        throw new Exception("Элемент не найден");
+                    }
+                    else
+                    {
+                        element.Name = model.NameMaterial;
+                        element.Count = model.CountMaterial;
+                    }
+                }
+                else
+                {
+                    element = new Material
+                    {
+                        Name = model.NameMaterial,
+                        Count = model.CountMaterial
+                    };
+                    context.Materials.Add(element);
                 }
 
-                Material material = new Material
-                {
-                    Name = model.NameMaterial,
-                    Count = model.CountMaterial
-                };
-                context.Materials.Add(material);
                 context.SaveChanges();
             }
         }
@@ -59,24 +74,6 @@ namespace GoWorkFactoryDataBase.Implementations
                 {
                     throw new Exception("Элемент не найден");
                 }
-            }
-        }
-
-        public void Update(MaterialBindingModel model)
-        {
-            using (var context = new GoWorkFactoryDataBaseContext())
-            {
-                Material material = context.Materials.FirstOrDefault(x => x.Id == model.Id);
-
-                if (material == null)
-                {
-                    throw new Exception("Такого продукта не существует");
-                }
-
-                material.Count = model.CountMaterial;
-                material.Name = model.NameMaterial;
-
-                context.SaveChanges();
             }
         }
     }

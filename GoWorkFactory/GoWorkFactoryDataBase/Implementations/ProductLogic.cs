@@ -12,35 +12,75 @@ namespace GoWorkFactoryDataBase.Implementations
 {
     public class ProductLogic : IProductLogic
     {
-        public void Create(ProductBindingModel model)
+
+        public void CreateOrUpdate(ProductBindingModel model)
         {
             using (var context = new GoWorkFactoryDataBaseContext())
             {
-                if (context.Products.FirstOrDefault(x => x.Name == model.NameProduct) != null)
+                using (var transaction = context.Database.BeginTransaction())
                 {
-                    throw new Exception("Уже есть изделие с таким названием");
-                }
-
-                Product product = new Product
-                {
-                    Name = model.NameProduct,
-                    Price = model.CostProduct
-                };
-
-                context.Products.Add(product);
-                context.SaveChanges();
-
-                foreach (var material in model.Materials)
-                {
-                    context.MaterialProducts.Add(new MaterialProduct
+                    try
                     {
-                        IsReserve = false,
-                        MaterialAmount = material.Value.Item2,
-                        MaterialId = material.Key,
-                        ProductId = product.Id
-                    });
+                        Product element = context.Products.FirstOrDefault(rec =>
+                        rec.Name == model.NameProduct && rec.Id != model.Id);
+                        if (element != null)
+                        {
+                            throw new Exception("Уже есть изделие с таким названием");
+                        }
+                        if (model.Id.HasValue)
+                        {
+                            element = context.Products.FirstOrDefault(rec => rec.Id ==
+                            model.Id);
+                            if (element == null)
+                            {
+                                throw new Exception("Элемент не найден");
+                            }
+                        }
+                        else
+                        {
+                            element = new Product();
+                            context.Products.Add(element);
+                        }
+                        element.Name = model.NameProduct;
+                        element.Price = model.CostProduct;
+                        context.SaveChanges();
+                        if (model.Id.HasValue)
+                        {
+                            var materialProducts = context.MaterialProducts.Where(rec
+                                => rec.ProductId == model.Id.Value).ToList();
+
+                            context.MaterialProducts.RemoveRange(materialProducts.Where(rec =>
+                            !model.Materials.ContainsKey(rec.MaterialId)).ToList());
+                            context.SaveChanges();
+
+                            foreach (var materialProduct in materialProducts)
+                            {
+                                materialProduct.MaterialAmount =
+                                model.Materials[materialProduct.MaterialId].Item2;
+
+                                model.Materials.Remove(materialProduct.MaterialId);
+                            }
+                            context.SaveChanges();
+                        }
+                        // добавили новые
+                        foreach (var pc in model.Materials)
+                        {
+                            context.MaterialProducts.Add(new MaterialProduct
+                            {
+                                ProductId = element.Id,
+                                MaterialId = pc.Key,
+                                MaterialAmount = pc.Value.Item2
+                            });
+                            context.SaveChanges();
+                        }
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
                 }
-                context.SaveChanges();
             }
         }
 
@@ -82,34 +122,6 @@ namespace GoWorkFactoryDataBase.Implementations
                 {
                     throw new Exception("Элемент не найден");
                 }
-            }
-        }
-
-        public void Update(ProductBindingModel model)
-        {
-            using (var context = new GoWorkFactoryDataBaseContext())
-            {
-                Product product = context.Products.FirstOrDefault(x => x.Id == model.Id);
-
-                if (product == null)
-                {
-                    throw new Exception("Такого продукта не существует");
-                }
-
-                product.Name = model.NameProduct;
-                product.Price = model.CostProduct;
-
-                var materialProducts = context.MaterialProducts.Where(x => x.ProductId == model.Id).ToList();
-
-                context.MaterialProducts.RemoveRange(materialProducts.Where(x => !model.Materials.ContainsKey(x.MaterialId)));
-                context.SaveChanges();
-
-                foreach (var material in materialProducts)
-                {
-                    material.MaterialAmount = model.Materials[material.MaterialId].Item2;
-                }
-
-                context.SaveChanges();
             }
         }
     }
