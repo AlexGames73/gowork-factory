@@ -41,8 +41,8 @@ namespace GoWorkFactoryViewAdministrator.Forms
                 materialLogic.CreateOrUpdate(new MaterialBindingModel
                 {
                     Id = id,
-                    CountMaterial = int.Parse(textBoxCount.Text),
-                    NameMaterial = textBoxName.Text
+                    Count = int.Parse(textBoxCount.Text),
+                    Name = textBoxName.Text
                 });
                 MessageBox.Show("Сохранение прошло успешно", "Сообщение",
                MessageBoxButtons.OK, MessageBoxIcon.Information);

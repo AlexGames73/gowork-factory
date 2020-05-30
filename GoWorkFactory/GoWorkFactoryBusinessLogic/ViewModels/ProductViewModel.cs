@@ -10,10 +10,13 @@ namespace GoWorkFactoryBusinessLogic.ViewModels
         public int Id { get; set; }
 
         [DisplayName("Название продукта")]
-        public string NameProduct { get; set; }
+        public string Name { get; set; }
 
         [DisplayName("Стоимость продукта")]
-        public int CostProduct { get; set; }
+        public int Price { get; set; }
+
+        [DisplayName("Стоимость продукта")]
+        public int Count { get; set; }
         public Dictionary<int, (string, int)> Materials { get; set; }
     }
 }

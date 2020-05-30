@@ -33,12 +33,12 @@ namespace GoWorkFactoryViewAdministrator.Forms
         public ProductMaterialForm(IMaterialLogic materialLogic)
         {
             InitializeComponent();
-            var materials = materialLogic.Read(null);
+            var materials = materialLogic.Read(null).ToList();
             if (materials != null)
             {
                 comboBoxMaterials.DisplayMember = "NameMaterial";
                 comboBoxMaterials.ValueMember = "Id";
-                comboBoxMaterials.DataSource = materialLogic;
+                comboBoxMaterials.DataSource = materials;
                 comboBoxMaterials.SelectedItem = null;
             }
         }

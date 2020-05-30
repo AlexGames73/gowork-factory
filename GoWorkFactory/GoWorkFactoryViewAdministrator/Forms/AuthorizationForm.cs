@@ -1,4 +1,5 @@
 ﻿using GoWorkFactoryBusinessLogic.Interfaces;
+using GoWorkFactoryDataBase.Models;
 using System;
 using System.Linq;
 using System.Windows.Forms;
@@ -38,11 +39,12 @@ namespace GoWorkFactoryViewAdministrator.Forms
                 Password = textBoxPassword.Text
             }).ToList();
 
-            if (users != null)
+            if (users != null && users.Count > 0)
             {
-                if (users[0].Role == GoWorkFactoryBusinessLogic.Enums.UserRole.Admin)
+                var curUser = users[0];
+                if (curUser.Role == GoWorkFactoryBusinessLogic.Enums.UserRole.Admin)
                 {
-                    Container.Resolve<CreateMaterialForm>();
+                    Program.Admin = curUser;
                     Close();
                 }
                 else

@@ -26,16 +26,16 @@ namespace GoWorkFactoryDataBase.Implementations
                     }
                     else
                     {
-                        element.Name = model.NameMaterial;
-                        element.Count = model.CountMaterial;
+                        element.Name = model.Name;
+                        element.Count = model.Count;
                     }
                 }
                 else
                 {
                     element = new Material
                     {
-                        Name = model.NameMaterial,
-                        Count = model.CountMaterial
+                        Name = model.Name,
+                        Count = model.Count
                     };
                     context.Materials.Add(element);
                 }

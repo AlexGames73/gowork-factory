@@ -1,4 +1,5 @@
 ﻿using GoWorkFactoryBusinessLogic.Interfaces;
+using GoWorkFactoryBusinessLogic.ViewModels;
 using GoWorkFactoryDataBase.Implementations;
 using GoWorkFactoryViewAdministrator.Forms;
 using System;
@@ -10,6 +11,7 @@ namespace GoWorkFactoryViewAdministrator
 {
     static class Program
     {
+        public static UserViewModel Admin { get; set; }
         /// <summary>
         /// Главная точка входа для приложения.
         /// </summary>
@@ -19,7 +21,12 @@ namespace GoWorkFactoryViewAdministrator
             var container = BuildUnityContainer();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(container.Resolve<AuthorizationForm>());
+            var authForm = container.Resolve<AuthorizationForm>();
+            authForm.ShowDialog();
+            if (Admin != null)
+            {
+                Application.Run(container.Resolve<ProductMainForm>());
+            }
         }
         private static IUnityContainer BuildUnityContainer()
         {

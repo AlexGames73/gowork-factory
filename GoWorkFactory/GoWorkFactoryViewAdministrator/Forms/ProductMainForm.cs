@@ -22,7 +22,6 @@ namespace GoWorkFactoryViewAdministrator.Forms
         {
             InitializeComponent();
             this.productLogic = productLogic;
-            LoadData();
         }
 
         private void LoadData()
@@ -34,7 +33,7 @@ namespace GoWorkFactoryViewAdministrator.Forms
                 {
                     dataGridView.DataSource = products;
                     dataGridView.Columns[0].Visible = false;
-                    dataGridView.Columns[3].Visible = false;
+                    dataGridView.Columns[4].Visible = false;
                     dataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                 }
             }

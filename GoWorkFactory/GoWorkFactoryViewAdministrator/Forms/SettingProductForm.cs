@@ -81,8 +81,9 @@ namespace GoWorkFactoryViewAdministrator.Forms
                 productLogic.CreateOrUpdate(new ProductBindingModel
                 {
                     Id = id,
-                    NameProduct = textBoxName.Name,
-                    CostProduct = int.Parse(textBoxPrice.Text),
+                    Name = textBoxName.Text,
+                    Price = int.Parse(textBoxPrice.Text),
+                    Count = int.Parse(textBoxCount.Text),
                     Materials = productMaterials
                 });
                 MessageBox.Show("Сохранение прошло успешно", "Сообщение",
@@ -133,8 +134,9 @@ namespace GoWorkFactoryViewAdministrator.Forms
 
                     if (view != null)
                     {
-                        textBoxName.Text = view.NameProduct;
-                        textBoxPrice.Text = view.CostProduct.ToString();
+                        textBoxName.Text = view.Name;
+                        textBoxPrice.Text = view.Price.ToString();
+                        textBoxCount.Text = view.Count.ToString();
                         productMaterials = view.Materials;
                         LoadData();
                     }

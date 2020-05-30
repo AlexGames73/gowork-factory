@@ -22,7 +22,7 @@ namespace GoWorkFactoryDataBase.Implementations
                     try
                     {
                         Product element = context.Products.FirstOrDefault(rec =>
-                        rec.Name == model.NameProduct && rec.Id != model.Id);
+                        rec.Name == model.Name && rec.Id != model.Id);
                         if (element != null)
                         {
                             throw new Exception("Уже есть изделие с таким названием");
@@ -41,8 +41,9 @@ namespace GoWorkFactoryDataBase.Implementations
                             element = new Product();
                             context.Products.Add(element);
                         }
-                        element.Name = model.NameProduct;
-                        element.Price = model.CostProduct;
+                        element.Name = model.Name;
+                        element.Price = model.Price;
+                        element.Count = model.Count;
                         context.SaveChanges();
                         if (model.Id.HasValue)
                         {
@@ -94,8 +95,9 @@ namespace GoWorkFactoryDataBase.Implementations
                .Select(rec => new ProductViewModel
                {
                    Id = rec.Id,
-                   NameProduct = rec.Name,
-                   CostProduct = rec.Price,
+                   Name = rec.Name,
+                   Price = rec.Price,
+                   Count = rec.Count,
                    Materials = context.MaterialProducts
                 .Include(recPC => recPC.Material)
                 .Where(recPC => recPC.ProductId == rec.Id)
