@@ -25,17 +25,28 @@ namespace GoWorkFactoryDataBase.Implementations
             }
         }
 
-        public void Create(UserBindingModel model)
+        public void CreateOrUpdate(UserBindingModel model)
         {
             using (var context = new GoWorkFactoryDataBaseContext())
             {
-                context.Users.Add(new Models.User
+                var user = context.Users.FirstOrDefault(x => x.Username == model.Username && x.Id != model.Id);
+                if (user != null)
                 {
-                    Username = model.Username,
-                    Password = model.Password,
-                    Email = model.Email,
-                    Role = UserRole.User
-                });
+                    throw new Exception("Пользователь с таким ником уже существует");
+                }
+                user = context.Users.FirstOrDefault(x => x.Id == model.Id);
+                if (user == null)
+                {
+                    user = new Models.User
+                    {
+                        Role = UserRole.User
+                    };
+                    context.Users.Add(user);
+                }
+
+                user.Username = model.Username;
+                user.Password = model.Password;
+                user.Email = model.Email;
                 context.SaveChanges();
             }
         }
@@ -45,7 +56,11 @@ namespace GoWorkFactoryDataBase.Implementations
             using (var context = new GoWorkFactoryDataBaseContext())
             {
                 return context.Users
-                    .Where(x => model == null || x.Id == model.Id)
+                    .Where(x => 
+                        (model == null) || 
+                        (x.Id == model.Id) ||
+                        (x.Username == model.Username && x.Password == model.Password)
+                    )
                     .Select(x => new UserViewModel
                     {
                         Id = x.Id,
@@ -69,23 +84,6 @@ namespace GoWorkFactoryDataBase.Implementations
                 }
 
                 context.Users.Remove(user);
-                context.SaveChanges();
-            }
-        }
-
-        public void Update(UserBindingModel model)
-        {
-            using (var context = new GoWorkFactoryDataBaseContext())
-            {
-                var user = context.Users.FirstOrDefault(x => x.Id == model.Id);
-                if (user == null)
-                {
-                    throw new Exception("Такого пользователя не существует");
-                }
-
-                user.Username = model.Username;
-                user.Password = model.Password;
-                user.Email = model.Email;
                 context.SaveChanges();
             }
         }

@@ -1,6 +1,7 @@
 ﻿using GoWorkFactoryBusinessLogic.BindingModels;
 using GoWorkFactoryBusinessLogic.Interfaces;
 using GoWorkFactoryBusinessLogic.ViewModels;
+using GoWorkFactoryDataBase.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -31,17 +32,21 @@ namespace GoWorkFactoryDataBase.Implementations
             }
         }
 
-        public void Create(OrderBindingModel model)
+        public void CreateOrUpdate(OrderBindingModel model)
         {
             using (var context = new GoWorkFactoryDataBaseContext())
             {
-                context.Orders.Add(new Models.Order
+                var order = context.Orders.FirstOrDefault(x => x.Id == model.Id);
+                if (order == null)
                 {
-                    SerialNumber = model.SerialNumber,
-                    DeliveryDate = model.DeliveryDate,
-                    DeliveryAddress = model.DeliveryAddress,
-                    UserId = model.UserId
-                });
+                    order = new Order();
+                    context.Orders.Add(order);
+                }
+
+                order.SerialNumber = model.SerialNumber;
+                order.UserId = model.UserId.Value;
+                order.DeliveryDate = model.DeliveryDate;
+                order.DeliveryAddress = model.DeliveryAddress;
                 context.SaveChanges();
             }
         }
@@ -52,9 +57,7 @@ namespace GoWorkFactoryDataBase.Implementations
             {
                 return context.Orders
                     .Include(x => x.User)
-                    .Include(x => x.ProductOrders)
-                        .ThenInclude(x => x.Product)
-                    .Where(x => model == null && x.Id == model.Id)
+                    .Where(x => model == null || x.Id == model.Id || x.UserId == model.UserId)
                     .Select(x => new OrderViewModel
                     {
                         Id = x.Id,
@@ -63,8 +66,12 @@ namespace GoWorkFactoryDataBase.Implementations
                         DeliveryAddress = x.DeliveryAddress,
                         UserId = x.UserId,
                         Username = x.User.Username,
-                        Products = x.ProductOrders.ToDictionary(y => y.ProductId, y => new Tuple<string, int> (y.Product.Name, y.ProductAmount).ToValueTuple())
-                    });
+                        Products = context.ProductOrders
+                            .Include(y => y.Product)
+                            .Where(y => y.OrderId == x.Id)
+                            .ToDictionary(y => y.ProductId, y => new Tuple<string, int> (y.Product.Name, y.ProductAmount).ToValueTuple())
+                    })
+                    .ToList();
             }
         }
 
@@ -98,21 +105,46 @@ namespace GoWorkFactoryDataBase.Implementations
             }
         }
 
-        public void Update(OrderBindingModel model)
+        public void ReservationOrder(ReservationBindingModel model)
         {
             using (var context = new GoWorkFactoryDataBaseContext())
             {
-                var order = context.Orders.FirstOrDefault(x => x.Id == model.Id);
+                var order = context.Orders.FirstOrDefault(x => x.Id == model.OrderId);
                 if (order == null)
                 {
                     throw new Exception("Такого заказа не существует");
                 }
 
-                order.SerialNumber = model.SerialNumber;
-                order.UserId = model.UserId;
-                order.DeliveryDate = model.DeliveryDate;
-                order.DeliveryAddress = model.DeliveryAddress;
-                context.SaveChanges();
+                using (var transaction = context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        List<ProductOrder> productOrders = context.ProductOrders.Include(x => x.Product).Include(x => x.Order).ToList();
+
+                        foreach (var product in productOrders)
+                        {
+                            List<MaterialProduct> materialProducts = context.MaterialProducts.Include(x => x.Material).ToList();
+
+                            foreach (var material in materialProducts)
+                            {
+                                material.IsReserve = true;
+
+                                if (material.Material.Count < product.ProductAmount * material.MaterialAmount)
+                                {
+                                    throw new Exception("Не хватает материалов на складах");
+                                }
+                            }
+                        }
+
+                        context.SaveChanges();
+                        transaction.Commit();
+                    }
+                    catch (Exception e)
+                    {
+                        transaction.Rollback();
+                        throw e;
+                    }
+                }
             }
         }
     }
