@@ -1,12 +1,6 @@
 ﻿using GoWorkFactoryBusinessLogic.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Unity;
 
@@ -38,16 +32,24 @@ namespace GoWorkFactoryViewAdministrator.Forms
                 return;
             }
 
-            var user = userLogic.Read(new GoWorkFactoryBusinessLogic.BindingModels.UserBindingModel
+            var users = userLogic.Read(new GoWorkFactoryBusinessLogic.BindingModels.UserBindingModel
             {
                 Username = textBoxLogin.Text,
-                Email = textBoxPassword.Text
-            }).ToList()?[0];
+                Password = textBoxPassword.Text
+            }).ToList();
 
-            if (user != null)
+            if (users != null)
             {
-                Container.Resolve<CreateMaterialForm>();
-                Close();
+                if (users[0].Role == GoWorkFactoryBusinessLogic.Enums.UserRole.Admin)
+                {
+                    Container.Resolve<CreateMaterialForm>();
+                    Close();
+                }
+                else
+                {
+                    MessageBox.Show("Пользователь не является админомs", "Ошибка", MessageBoxButtons.OK,
+                   MessageBoxIcon.Error);
+                }
             }
             else
             {

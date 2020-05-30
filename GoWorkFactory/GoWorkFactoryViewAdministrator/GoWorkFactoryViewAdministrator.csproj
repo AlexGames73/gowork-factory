@@ -91,6 +91,7 @@
     <Compile Include="Forms\SettingProductForm.Designer.cs">
       <DependentUpon>SettingProductForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\AuthorizationForm.resx">
       <DependentUpon>AuthorizationForm.cs</DependentUpon>
@@ -137,6 +138,10 @@
     <ProjectReference Include="..\GoWorkFactoryBusinessLogic\GoWorkFactoryBusinessLogic.csproj">
       <Project>{2D1AF772-588C-4A9D-BBE0-B14D3FDA09B7}</Project>
       <Name>GoWorkFactoryBusinessLogic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GoWorkFactoryDataBase\GoWorkFactoryDataBase.csproj">
+      <Project>{3D281130-37E0-439E-BB52-40208C566296}</Project>
+      <Name>GoWorkFactoryDataBase</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
