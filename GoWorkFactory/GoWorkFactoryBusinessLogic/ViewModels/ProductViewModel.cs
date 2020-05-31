@@ -18,5 +18,10 @@ namespace GoWorkFactoryBusinessLogic.ViewModels
         [DisplayName("Стоимость продукта")]
         public int Count { get; set; }
         public Dictionary<int, (string, int)> Materials { get; set; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

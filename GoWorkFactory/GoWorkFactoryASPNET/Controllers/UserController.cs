@@ -71,9 +71,8 @@ namespace GoWorkFactoryASPNET.Controllers
                         Email = model.Email
                     });
 
-                    int userId = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
-
-                    await Authenticate(model.Username, userId); // аутентификация
+                    var user = userLogic.Read(new UserBindingModel { Username = model.Username, Password = model.Password }).FirstOrDefault();
+                    await Authenticate(model.Username, user.Id); // аутентификация
 
                     return RedirectToAction("Index", "Home");
                 }

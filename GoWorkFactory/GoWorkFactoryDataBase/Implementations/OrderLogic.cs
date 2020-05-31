@@ -56,23 +56,33 @@ namespace GoWorkFactoryDataBase.Implementations
             using (var context = new GoWorkFactoryDataBaseContext())
             {
                 return context.Orders
+                    .Include(x => x.ProductOrders)
+                        .ThenInclude(x => x.Product)
                     .Include(x => x.User)
-                    .Where(x => model == null || x.Id == model.Id || x.UserId == model.UserId)
-                    .Select(x => new OrderViewModel
-                    {
-                        Id = x.Id,
-                        SerialNumber = x.SerialNumber,
-                        DeliveryDate = x.DeliveryDate,
-                        DeliveryAddress = x.DeliveryAddress,
-                        UserId = x.UserId,
-                        Username = x.User.Username,
-                        Products = context.ProductOrders
-                            .Include(y => y.Product)
-                            .Where(y => y.OrderId == x.Id)
-                            .ToDictionary(y => y.ProductId, y => new Tuple<string, int> (y.Product.Name, y.ProductAmount).ToValueTuple())
-                    })
+                    .Where(x => model == null || x.Id == model.Id || x.UserId == model.UserId || x.SerialNumber == model.SerialNumber)
+                    .Select(OrderToViewModel)
                     .ToList();
             }
+        }
+
+        private OrderViewModel OrderToViewModel(Order x)
+        {
+            return new OrderViewModel
+            {
+                Id = x.Id,
+                SerialNumber = x.SerialNumber,
+                DeliveryDate = x.DeliveryDate,
+                DeliveryAddress = x.DeliveryAddress,
+                UserId = x.UserId,
+                Username = x.User.Username,
+                Products = x.ProductOrders.Select(y => new ProductViewModel
+                {
+                    Id = y.Product.Id,
+                    Name = y.Product.Name,
+                    Price = y.Product.Price,
+                    Count = y.ProductAmount
+                }).ToList()
+            };
         }
 
         public void Remove(OrderBindingModel model)

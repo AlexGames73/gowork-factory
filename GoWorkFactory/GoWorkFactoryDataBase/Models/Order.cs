@@ -8,12 +8,12 @@ namespace GoWorkFactoryDataBase.Models
     {
         public int Id { get; set; }
         public int UserId { get; set; }
-        public virtual User User { get; set; }
+        public User User { get; set; }
         public string SerialNumber { get; set; }
         public DateTime DeliveryDate { get; set; }
         public string DeliveryAddress { get; set; }
 
         [ForeignKey("OrderId")]
-        public virtual List<ProductOrder> ProductOrders { get; set; }
+        public List<ProductOrder> ProductOrders { get; set; }
     }
 }

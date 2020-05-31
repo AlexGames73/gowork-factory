@@ -17,6 +17,6 @@ namespace GoWorkFactoryBusinessLogic.ViewModels
         [DisplayName("Адрес доставки")]
         public string DeliveryAddress { get; set; }
 
-        public Dictionary<int, (string, int)> Products { get; set; } // Dictionary<ProductId, (Name, Count)>
+        public List<ProductViewModel> Products { get; set; }
     }
 }
