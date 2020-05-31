@@ -12,6 +12,7 @@ namespace GoWorkFactoryDataBase.Models
         public string SerialNumber { get; set; }
         public DateTime DeliveryDate { get; set; }
         public string DeliveryAddress { get; set; }
+        public bool Reserved { get; set; }
 
         [ForeignKey("OrderId")]
         public List<ProductOrder> ProductOrders { get; set; }

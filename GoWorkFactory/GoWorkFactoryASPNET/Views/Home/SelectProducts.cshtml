@@ -4,13 +4,13 @@
 }
 
 
-<div class="text-center w-100 d-flex justify-content-center" style="overflow:hidden; overflow-wrap: break-word">
+<div class="text-center w-100 d-inline-block justify-content-center">
     @foreach (var item in ViewBag.AllProducts)
     {
         var select = (ViewBag.Order.Products as List<ProductViewModel>).FirstOrDefault(x => x.Id == item.Id);
-        <div class="card d-inline-block" style="width: 20rem; margin: 1rem;">
+        <div class="card d-inline-block" style="min-width: 20rem; margin: 1rem;">
             <div class="card-header">@item.Name @if (select?.Count > 0) {<text>&or;</text>}</div>
-            <div class="card-body" style="height:200px">
+            <div class="card-body" style="min-height:200px">
                 <p class="lead">Цена за штуку: @item.Price</p>
                 @if (select?.Count > 0)
                 {
@@ -36,7 +36,7 @@
                                 <input type="number" asp-for="ProductAmount" />
                                 <span asp-validation-for="ProductAmount" />
                             </div>
-                            <div class="form-group d-flex justify-content-center">
+                            <div class="form-group d-inline-block justify-content-center">
                                 <input type="submit" value="-" asp-action="RemoveFromOrder" asp-controller="Home" class="btn btn-outline-dark d-inline-block" style="margin: 1rem" />
                                 <input type="submit" value="+" asp-action="AddToOrder" asp-controller="Home" class="btn btn-outline-dark d-inline-block" style="margin: 1rem" />
                             </div>
@@ -71,7 +71,6 @@
     }
 </div>
 <div class="text-center w-100">
-    <span class="lead">Общая сумма: @((ViewBag.Order.Products as List<ProductViewModel>).Sum(x => x.Price * x.Count))</span>
-    <br />
+    <p class="lead">Общая сумма: @((ViewBag.Order.Products as List<ProductViewModel>).Sum(x => x.Price * x.Count))</p>
     <a class="btn btn-success" asp-action="EditOrder" asp-controller="Home" asp-route-orderId="@ViewBag.Order.Id">Сохранить</a>
 </div>

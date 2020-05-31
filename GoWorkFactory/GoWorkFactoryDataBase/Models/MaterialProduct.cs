@@ -8,6 +8,5 @@
         public int MaterialId { get; set; }
         public virtual Material Material { get; set; }
         public int MaterialAmount { get; set; }
-        public bool IsReserve { get; set; }
     }
 }

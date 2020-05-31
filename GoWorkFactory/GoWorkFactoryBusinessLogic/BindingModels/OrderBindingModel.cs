@@ -9,5 +9,6 @@ namespace GoWorkFactoryBusinessLogic.BindingModels
         public string SerialNumber { get; set; }
         public DateTime DeliveryDate { get; set; }
         public string DeliveryAddress { get; set; }
+        public bool Reserved { get; set; }
     }
 }

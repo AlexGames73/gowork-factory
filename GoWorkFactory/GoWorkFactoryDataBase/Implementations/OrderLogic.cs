@@ -18,7 +18,7 @@ namespace GoWorkFactoryDataBase.Implementations
                 var productOrder = context.ProductOrders.FirstOrDefault(x => x.OrderId == model.OrderId && x.ProductId == model.ProductId);
                 if (productOrder == null)
                 {
-                    productOrder = new Models.ProductOrder
+                    productOrder = new ProductOrder
                     {
                         OrderId = model.OrderId,
                         ProductId = model.ProductId,
@@ -47,6 +47,7 @@ namespace GoWorkFactoryDataBase.Implementations
                 order.UserId = model.UserId.Value;
                 order.DeliveryDate = model.DeliveryDate;
                 order.DeliveryAddress = model.DeliveryAddress;
+                order.Reserved = model.Reserved;
                 context.SaveChanges();
             }
         }
@@ -75,6 +76,7 @@ namespace GoWorkFactoryDataBase.Implementations
                 DeliveryAddress = x.DeliveryAddress,
                 UserId = x.UserId,
                 Username = x.User.Username,
+                Reverved = x.Reserved,
                 Products = x.ProductOrders.Select(y => new ProductViewModel
                 {
                     Id = y.Product.Id,
@@ -125,36 +127,8 @@ namespace GoWorkFactoryDataBase.Implementations
                     throw new Exception("Такого заказа не существует");
                 }
 
-                using (var transaction = context.Database.BeginTransaction())
-                {
-                    try
-                    {
-                        List<ProductOrder> productOrders = context.ProductOrders.Include(x => x.Product).Include(x => x.Order).ToList();
-
-                        foreach (var product in productOrders)
-                        {
-                            List<MaterialProduct> materialProducts = context.MaterialProducts.Include(x => x.Material).ToList();
-
-                            foreach (var material in materialProducts)
-                            {
-                                material.IsReserve = true;
-
-                                if (material.Material.Count < product.ProductAmount * material.MaterialAmount)
-                                {
-                                    throw new Exception("Не хватает материалов на складах");
-                                }
-                            }
-                        }
-
-                        context.SaveChanges();
-                        transaction.Commit();
-                    }
-                    catch (Exception e)
-                    {
-                        transaction.Rollback();
-                        throw e;
-                    }
-                }
+                order.Reserved = model.Reserved;
+                context.SaveChanges();
             }
         }
     }

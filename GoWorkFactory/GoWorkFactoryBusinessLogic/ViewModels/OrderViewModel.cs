@@ -16,6 +16,8 @@ namespace GoWorkFactoryBusinessLogic.ViewModels
         public DateTime DeliveryDate { get; set; }
         [DisplayName("Адрес доставки")]
         public string DeliveryAddress { get; set; }
+        [DisplayName("Зарезервинован")]
+        public bool Reverved { get; set; }
 
         public List<ProductViewModel> Products { get; set; }
     }

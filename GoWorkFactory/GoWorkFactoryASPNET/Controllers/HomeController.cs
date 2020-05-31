@@ -92,5 +92,18 @@ namespace GoWorkFactoryASPNET.Controllers
             orderLogic.RemoveProduct(model);
             return RedirectToAction("SelectProducts", new { orderId = model.OrderId });
         }
+
+        public IActionResult ReserveOrders(List<ReserveViewModel> reserveViewModels)
+        {
+            foreach (var item in reserveViewModels)
+            {
+                orderLogic.ReservationOrder(new ReservationBindingModel
+                {
+                    OrderId = item.OrderId,
+                    Reserved = item.Reserved
+                });
+            }
+            return Ok();
+        }
     }
 }

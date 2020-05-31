@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GoWorkFactoryBusinessLogic.BindingModels
+namespace GoWorkFactoryBusinessLogic.ViewModels
 {
-    public class ReservationBindingModel
+    public class ReserveViewModel
     {
         public int OrderId { get; set; }
         public bool Reserved { get; set; }
