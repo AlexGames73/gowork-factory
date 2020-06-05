@@ -101,7 +101,7 @@
             this.Controls.Add(this.labelComponent);
             this.Controls.Add(this.comboBoxMaterials);
             this.Name = "ProductMaterialForm";
-            this.Text = "ProductMaterialForm";
+            this.Text = "Материал";
             this.ResumeLayout(false);
             this.PerformLayout();
 

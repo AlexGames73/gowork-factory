@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace GoWorkFactoryBusinessLogic.BusinessLogics
 {
-    static class SaveToWord
+    public static class SaveToWord
     {
         /// <summary>
         /// Создание документа
@@ -27,6 +27,33 @@ namespace GoWorkFactoryBusinessLogic.BusinessLogics
                 docBody.AppendChild(CreateParagraph(new WordParagraph
                 {
                     Texts = new List<WordText> { 
+                        info.Title
+                    },
+                    Properties = new WordParagraphProperties
+                    {
+                        Bold = true,
+                        Size = "24",
+                        JustificationValues = JustificationValues.Center
+                    }
+                }));
+                docBody.AppendChild(CreateSectionProperties());
+                wordDocument.MainDocumentPart.Document.Save();
+            }
+            return memoryStream;
+        }
+
+        public static Stream CreateDocRequestComponents(RequestComponentsInfo info)
+        {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
+            MemoryStream memoryStream = new MemoryStream();
+            using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(memoryStream, WordprocessingDocumentType.Document))
+            {
+                MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
+                mainPart.Document = new Document();
+                Body docBody = mainPart.Document.AppendChild(new Body());
+                docBody.AppendChild(CreateParagraph(new WordParagraph
+                {
+                    Texts = new List<WordText> {
                         info.Title
                     },
                     Properties = new WordParagraphProperties

@@ -12,9 +12,60 @@ using System.Threading;
 namespace GoWorkFactoryBusinessLogic.BusinessLogics
 {
     //for orders
-    static class SaveToExcel
+    public static class SaveToExcel
     {
         public static Stream CreateDoc(ExcelInfo info)
+        {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
+            MemoryStream memoryStream = new MemoryStream();
+            using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Create(memoryStream, SpreadsheetDocumentType.Workbook))
+            {
+                // Создаем книгу (в ней хранятся листы)
+                WorkbookPart workbookpart = spreadsheetDocument.AddWorkbookPart();
+                workbookpart.Workbook = new Workbook();
+                CreateStyles(workbookpart);
+                // Получаем/создаем хранилище текстов для книги
+                SharedStringTablePart shareStringPart = spreadsheetDocument.WorkbookPart.GetPartsOfType<SharedStringTablePart>().Count() > 0
+                ? spreadsheetDocument.WorkbookPart.GetPartsOfType<SharedStringTablePart>().First()
+                : spreadsheetDocument.WorkbookPart.AddNewPart<SharedStringTablePart>();
+                // Создаем SharedStringTable, если его нет
+                if (shareStringPart.SharedStringTable == null)
+                {
+                    shareStringPart.SharedStringTable = new SharedStringTable();
+                }
+                // Создаем лист в книгу
+                WorksheetPart worksheetPart = workbookpart.AddNewPart<WorksheetPart>();
+                worksheetPart.Worksheet = new Worksheet(new SheetData());
+                // Добавляем лист в книгу
+                Sheets sheets = spreadsheetDocument.WorkbookPart.Workbook.AppendChild<Sheets>(new Sheets());
+                Sheet sheet = new Sheet()
+                {
+                    Id = spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPart),
+                    SheetId = 1,
+                    Name = "Лист"
+                };
+                sheets.Append(sheet);
+                InsertCellInWorksheet(new ExcelCellParameters
+                {
+                    Worksheet = worksheetPart.Worksheet,
+                    ShareStringPart = shareStringPart,
+                    ColumnName = "A",
+                    RowIndex = 1,
+                    Text = info.Title,
+                    StyleIndex = 2U
+                });
+                MergeCells(new ExcelMergeParameters
+                {
+                    Worksheet = worksheetPart.Worksheet,
+                    CellFromName = "A1",
+                    CellToName = "E1"
+                });
+                workbookpart.Workbook.Save();
+            }
+            return memoryStream;
+        }
+
+        public static Stream CreateDocRequestComponents(RequestComponentsInfo info)
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
             MemoryStream memoryStream = new MemoryStream();

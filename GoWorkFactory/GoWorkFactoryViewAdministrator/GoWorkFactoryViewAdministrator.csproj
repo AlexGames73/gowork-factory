@@ -159,6 +159,12 @@
     <Compile Include="Forms\CreateMaterialForm.Designer.cs">
       <DependentUpon>CreateMaterialForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\CreateRequestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CreateRequestForm.Designer.cs">
+      <DependentUpon>CreateRequestForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\MaterialsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -190,6 +196,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\CreateMaterialForm.resx">
       <DependentUpon>CreateMaterialForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CreateRequestForm.resx">
+      <DependentUpon>CreateRequestForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MaterialsForm.resx">
       <DependentUpon>MaterialsForm.cs</DependentUpon>

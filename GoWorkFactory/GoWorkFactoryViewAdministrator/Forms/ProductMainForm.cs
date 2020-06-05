@@ -98,5 +98,11 @@ namespace GoWorkFactoryViewAdministrator.Forms
                 }
             }
         }
+
+        private void оформитьЗаявкуToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = Container.Resolve<CreateRequestForm>();
+            form.ShowDialog();
+        }
     }
 }

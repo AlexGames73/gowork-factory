@@ -10,8 +10,9 @@ using System.Threading;
 namespace GoWorkFactoryBusinessLogic.BusinessLogics
 {
     //for plane parts
-    static class SaveToPdf
+    public static class SaveToPdf
     {
+        [System.Obsolete]
         public static Stream CreateDoc(PdfInfo info)
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");

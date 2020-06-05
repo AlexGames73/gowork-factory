@@ -34,6 +34,7 @@
             this.buttonRemoveProduct = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.материалыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.оформитьЗаявкуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -82,7 +83,8 @@
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.материалыToolStripMenuItem});
+            this.материалыToolStripMenuItem,
+            this.оформитьЗаявкуToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(800, 28);
@@ -96,6 +98,13 @@
             this.материалыToolStripMenuItem.Text = "Материалы";
             this.материалыToolStripMenuItem.Click += new System.EventHandler(this.материалыToolStripMenuItem_Click);
             // 
+            // оформитьЗаявкуToolStripMenuItem
+            // 
+            this.оформитьЗаявкуToolStripMenuItem.Name = "оформитьЗаявкуToolStripMenuItem";
+            this.оформитьЗаявкуToolStripMenuItem.Size = new System.Drawing.Size(145, 24);
+            this.оформитьЗаявкуToolStripMenuItem.Text = "Оформить заявку";
+            this.оформитьЗаявкуToolStripMenuItem.Click += new System.EventHandler(this.оформитьЗаявкуToolStripMenuItem_Click);
+            // 
             // ProductMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -108,7 +117,7 @@
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "ProductMainForm";
-            this.Text = "ProductMainForm";
+            this.Text = "Товары";
             this.Load += new System.EventHandler(this.ProductMainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.menuStrip1.ResumeLayout(false);
@@ -126,5 +135,6 @@
         private System.Windows.Forms.Button buttonRemoveProduct;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem материалыToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem оформитьЗаявкуToolStripMenuItem;
     }
 }
