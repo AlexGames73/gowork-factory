@@ -11,6 +11,255 @@ namespace GoWorkFactoryBusinessLogic.BusinessLogics
 {
     public static class SaveToWord
     {
+        public static Stream CreateDocOrdersProducts(OrdersProductsWordInfo info)
+        {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
+            MemoryStream memoryStream = new MemoryStream();
+            using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(memoryStream, WordprocessingDocumentType.Document))
+            {
+                MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
+                mainPart.Document = new Document();
+                Body docBody = mainPart.Document.AppendChild(new Body());
+                docBody.AppendChild(CreateParagraph(new WordParagraph
+                {
+                    Texts = new List<WordText> {
+                        info.Title
+                    },
+                    Properties = new WordParagraphProperties
+                    {
+                        Bold = true,
+                        Size = "24",
+                        JustificationValues = JustificationValues.Center
+                    }
+                }));
+                var table = new Table();
+                var props = new TableProperties(
+                    new TableBorders(
+                        new TopBorder { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 12 },
+                        new BottomBorder { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 12 },
+                        new LeftBorder { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 12 },
+                        new RightBorder { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 12 },
+                        new InsideHorizontalBorder { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 12 },
+                        new InsideVerticalBorder { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 12 }
+                    ));
+                table.AppendChild(props);
+                var tr = new TableRow();
+                var tc1 = new TableCell();
+                var tc2 = new TableCell();
+                var tc3 = new TableCell();
+                var tc4 = new TableCell();
+                tc1.AppendChild(CreateParagraph(new WordParagraph
+                {
+                    Texts = new List<WordText> { "Заказ" },
+                    Properties = new WordParagraphProperties
+                    {
+                        Bold = true,
+                        Size = "24",
+                        JustificationValues = JustificationValues.Center
+                    }
+                }));
+                tc2.AppendChild(CreateParagraph(new WordParagraph()
+                {
+                    Texts = new List<WordText> { "Продукт" },
+                    Properties = new WordParagraphProperties
+                    {
+                        Bold = true,
+                        Size = "24",
+                        JustificationValues = JustificationValues.Center
+                    }
+                }));
+                tc3.AppendChild(CreateParagraph(new WordParagraph()
+                {
+                    Texts = new List<WordText> { "Количество" },
+                    Properties = new WordParagraphProperties
+                    {
+                        Bold = true,
+                        Size = "24",
+                        JustificationValues = JustificationValues.Center
+                    }
+                }));
+                tc4.AppendChild(CreateParagraph(new WordParagraph()
+                {
+                    Texts = new List<WordText> { "Цена" },
+                    Properties = new WordParagraphProperties
+                    {
+                        Bold = true,
+                        Size = "24",
+                        JustificationValues = JustificationValues.Center
+                    }
+                }));
+                tr.AppendChild(tc1);
+                tr.AppendChild(tc2);
+                tr.AppendChild(tc3);
+                tr.AppendChild(tc4);
+                table.AppendChild(tr);
+                foreach (var order in info.OrdersProducts)
+                {
+                    tr = new TableRow();
+                    tc1 = new TableCell();
+                    tc2 = new TableCell();
+                    tc3 = new TableCell();
+                    tc4 = new TableCell();
+                    tc1.AppendChild(CreateParagraph(new WordParagraph
+                    {
+                        Texts = new List<WordText> { order.Key },
+                        Properties = new WordParagraphProperties
+                        {
+                            Bold = true,
+                            Size = "24",
+                            JustificationValues = JustificationValues.Center
+                        }
+                    }));
+                    tc2.AppendChild(CreateParagraph(new WordParagraph()
+                    {
+                        Texts = new List<WordText> { "" },
+                        Properties = new WordParagraphProperties
+                        {
+                            Bold = true,
+                            Size = "24",
+                            JustificationValues = JustificationValues.Center
+                        }
+                    }));
+                    tc3.AppendChild(CreateParagraph(new WordParagraph()
+                    {
+                        Texts = new List<WordText> { "" },
+                        Properties = new WordParagraphProperties
+                        {
+                            Bold = true,
+                            Size = "24",
+                            JustificationValues = JustificationValues.Center
+                        }
+                    }));
+                    tc4.AppendChild(CreateParagraph(new WordParagraph()
+                    {
+                        Texts = new List<WordText> { "" },
+                        Properties = new WordParagraphProperties
+                        {
+                            Bold = true,
+                            Size = "24",
+                            JustificationValues = JustificationValues.Center
+                        }
+                    }));
+                    tr.AppendChild(tc1);
+                    tr.AppendChild(tc2);
+                    tr.AppendChild(tc3);
+                    tr.AppendChild(tc4);
+                    table.AppendChild(tr);
+                    int total = 0;
+                    foreach (var product in order)
+                    {
+                        tr = new TableRow();
+                        tc1 = new TableCell();
+                        tc2 = new TableCell();
+                        tc3 = new TableCell();
+                        tc4 = new TableCell();
+                        tc1.AppendChild(CreateParagraph(new WordParagraph
+                        {
+                            Texts = new List<WordText> { "" },
+                            Properties = new WordParagraphProperties
+                            {
+                                Bold = true,
+                                Size = "24",
+                                JustificationValues = JustificationValues.Center
+                            }
+                        }));
+                        tc2.AppendChild(CreateParagraph(new WordParagraph()
+                        {
+                            Texts = new List<WordText> { product.ProductName },
+                            Properties = new WordParagraphProperties
+                            {
+                                Bold = true,
+                                Size = "24",
+                                JustificationValues = JustificationValues.Center
+                            }
+                        }));
+                        tc3.AppendChild(CreateParagraph(new WordParagraph()
+                        {
+                            Texts = new List<WordText> { product.Count.ToString() },
+                            Properties = new WordParagraphProperties
+                            {
+                                Bold = true,
+                                Size = "24",
+                                JustificationValues = JustificationValues.Center
+                            }
+                        }));
+                        tc4.AppendChild(CreateParagraph(new WordParagraph()
+                        {
+                            Texts = new List<WordText> { product.Price.ToString() },
+                            Properties = new WordParagraphProperties
+                            {
+                                Bold = true,
+                                Size = "24",
+                                JustificationValues = JustificationValues.Center
+                            }
+                        }));
+                        tr.AppendChild(tc1);
+                        tr.AppendChild(tc2);
+                        tr.AppendChild(tc3);
+                        tr.AppendChild(tc4);
+                        table.AppendChild(tr);
+
+                        total += product.Price * product.Count;
+                    }
+                    tr = new TableRow();
+                    tc1 = new TableCell();
+                    tc2 = new TableCell();
+                    tc3 = new TableCell();
+                    tc4 = new TableCell();
+                    tc1.AppendChild(CreateParagraph(new WordParagraph
+                    {
+                        Texts = new List<WordText> { "" },
+                        Properties = new WordParagraphProperties
+                        {
+                            Bold = true,
+                            Size = "24",
+                            JustificationValues = JustificationValues.Center
+                        }
+                    }));
+                    tc2.AppendChild(CreateParagraph(new WordParagraph()
+                    {
+                        Texts = new List<WordText> { "" },
+                        Properties = new WordParagraphProperties
+                        {
+                            Bold = true,
+                            Size = "24",
+                            JustificationValues = JustificationValues.Center
+                        }
+                    }));
+                    tc3.AppendChild(CreateParagraph(new WordParagraph()
+                    {
+                        Texts = new List<WordText> { "Итого" },
+                        Properties = new WordParagraphProperties
+                        {
+                            Bold = true,
+                            Size = "24",
+                            JustificationValues = JustificationValues.Center
+                        }
+                    }));
+                    tc4.AppendChild(CreateParagraph(new WordParagraph()
+                    {
+                        Texts = new List<WordText> { total.ToString() },
+                        Properties = new WordParagraphProperties
+                        {
+                            Bold = true,
+                            Size = "24",
+                            JustificationValues = JustificationValues.Center
+                        }
+                    }));
+                    tr.AppendChild(tc1);
+                    tr.AppendChild(tc2);
+                    tr.AppendChild(tc3);
+                    tr.AppendChild(tc4);
+                    table.AppendChild(tr);
+                }
+                docBody.AppendChild(table);
+                docBody.AppendChild(CreateSectionProperties());
+                wordDocument.MainDocumentPart.Document.Save();
+            }
+            memoryStream.Position = 0;
+            return memoryStream;
+        }
+
         /// <summary>
         /// Создание документа
         /// </summary>

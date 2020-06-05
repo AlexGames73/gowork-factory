@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;
+using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -49,7 +50,26 @@ namespace GoWorkFactoryBusinessLogic.BusinessLogics
                         objMailMessage.Body = info.Text;
                         objMailMessage.SubjectEncoding = Encoding.UTF8;
                         objMailMessage.BodyEncoding = Encoding.UTF8;
-                        info.Attachments?.ForEach(x => objMailMessage.Attachments.Add(new Attachment(x.FileData, x.Name, x.ContentType)));
+                        info.Attachments?.ForEach(x =>
+                        {
+                            ContentType ct = new ContentType(x.ContentType);
+                            Attachment attachment = new Attachment(x.FileData, ct);
+                            attachment.ContentDisposition.FileName = "report.";
+                            switch (x.ContentType)
+                            {
+                                case MimeTypes.Excel:
+                                    attachment.ContentDisposition.FileName += "xls";
+                                    break;
+                                case MimeTypes.Pdf:
+                                    attachment.ContentDisposition.FileName += "pdf";
+                                    break;
+                                case MimeTypes.Word:
+                                    attachment.ContentDisposition.FileName += "doc";
+                                    break;
+                            }
+                            objMailMessage.Attachments.Add(attachment);
+
+                        });
                         objSmtpClient.UseDefaultCredentials = false;
                         objSmtpClient.EnableSsl = true;
                         objSmtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;

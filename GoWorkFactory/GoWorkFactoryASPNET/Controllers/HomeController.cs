@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GoWorkFactoryBusinessLogic.BindingModels;
+using GoWorkFactoryBusinessLogic.BusinessLogics;
 using GoWorkFactoryBusinessLogic.HelperModels;
 using GoWorkFactoryBusinessLogic.Interfaces;
 using GoWorkFactoryBusinessLogic.ViewModels;
@@ -18,11 +19,13 @@ namespace GoWorkFactoryASPNET.Controllers
     {
         private IProductLogic productLogic;
         private IOrderLogic orderLogic;
+        private ReportLogic reportLogic;
 
-        public HomeController(IProductLogic productLogic, IOrderLogic orderLogic)
+        public HomeController(IProductLogic productLogic, IOrderLogic orderLogic, ReportLogic reportLogic)
         {
             this.productLogic = productLogic;
             this.orderLogic = orderLogic;
+            this.reportLogic = reportLogic;
         }
 
         public IActionResult Index()
@@ -105,6 +108,48 @@ namespace GoWorkFactoryASPNET.Controllers
                     Reserved = item.Reserved
                 });
             }
+            return Ok();
+        }
+
+        [HttpPost]
+        public IActionResult ExcelReport()
+        {
+            int userId = int.Parse(User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+            MailLogic.MailSendAsync(new MailSendInfo
+            {
+                MailAddress = User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.Email).Value,
+                Subject = "Отчет по заказам",
+                Text = "Доброго времени суток, Ваш заказанный отчет прикреплен к этому сообщению",
+                Attachments = new List<MailAttachment>
+                {
+                    new MailAttachment
+                    {
+                        ContentType = MimeTypes.Excel,
+                        FileData = reportLogic.SaveOrdersProductsToExcelFile(userId)
+                    }
+                }
+            });
+            return Ok();
+        }
+
+        [HttpPost]
+        public IActionResult WordReport()
+        {
+            int userId = int.Parse(User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+            MailLogic.MailSendAsync(new MailSendInfo
+            {
+                MailAddress = User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.Email).Value,
+                Subject = "Отчет по заказам",
+                Text = "Доброго времени суток, Ваш заказанный отчет прикреплен к этому сообщению",
+                Attachments = new List<MailAttachment>
+                {
+                    new MailAttachment
+                    {
+                        ContentType = MimeTypes.Word,
+                        FileData = reportLogic.SaveOrdersProductsToWordFile(userId)
+                    }
+                }
+            });
             return Ok();
         }
     }
