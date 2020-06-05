@@ -1,8 +1,11 @@
-﻿using GoWorkFactoryBusinessLogic.Interfaces;
+﻿using GoWorkFactoryBusinessLogic.BusinessLogics;
+using GoWorkFactoryBusinessLogic.HelperModels;
+using GoWorkFactoryBusinessLogic.Interfaces;
 using GoWorkFactoryBusinessLogic.ViewModels;
 using GoWorkFactoryDataBase.Implementations;
 using GoWorkFactoryViewAdministrator.Forms;
 using System;
+using System.Configuration;
 using System.Windows.Forms;
 using Unity;
 using Unity.Lifetime;
@@ -19,6 +22,15 @@ namespace GoWorkFactoryViewAdministrator
         static void Main()
         {
             var container = BuildUnityContainer();
+
+            MailLogic.MailConfig(new MailSettings
+            {
+                SmtpClientHost = ConfigurationManager.AppSettings["SmtpClientHost"],
+                SmtpClientPort = Convert.ToInt32(ConfigurationManager.AppSettings["SmtpClientPort"]),
+                MailLogin = ConfigurationManager.AppSettings["MailLogin"],
+                MailPassword = ConfigurationManager.AppSettings["MailPassword"],
+            });
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             var authForm = container.Resolve<AuthorizationForm>();
@@ -41,6 +53,7 @@ namespace GoWorkFactoryViewAdministrator
            HierarchicalLifetimeManager());
             currentContainer.RegisterType<IUserLogic, UserLogic>(new
            HierarchicalLifetimeManager());
+            currentContainer.RegisterType<ReportLogic>(new HierarchicalLifetimeManager());
             return currentContainer;
         }
     }

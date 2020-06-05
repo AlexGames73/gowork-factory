@@ -49,5 +49,22 @@ namespace GoWorkFactoryBusinessLogic.BusinessLogics
                 OrdersProducts = GetOrdersProducts(userId)
             });
         }
+
+        public Stream SaveRequestMaterialsToDocFile(List<(string, int)> materials)
+        {
+            return SaveToWord.CreateDocRequestMaterials(new RequestMaterialsInfo
+            {
+                Title = "Заявка на материалы",
+                Materials = materials
+            });
+        }
+        public Stream SaveRequestMaterialsToExcelFile(List<(string, int)> materials)
+        {
+            return SaveToExcel.CreateDocRequestMaterials(new RequestMaterialsInfo
+            {
+                Title = "Заявка на материалы",
+                Materials = materials
+            });
+        }
     }
 }

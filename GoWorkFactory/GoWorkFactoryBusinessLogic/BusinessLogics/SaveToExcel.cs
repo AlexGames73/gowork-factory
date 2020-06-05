@@ -219,7 +219,7 @@ namespace GoWorkFactoryBusinessLogic.BusinessLogics
             return memoryStream;
         }
 
-        public static Stream CreateDocRequestComponents(RequestComponentsInfo info)
+        public static Stream CreateDocRequestMaterials(RequestMaterialsInfo info)
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
             MemoryStream memoryStream = new MemoryStream();
@@ -230,9 +230,12 @@ namespace GoWorkFactoryBusinessLogic.BusinessLogics
                 workbookpart.Workbook = new Workbook();
                 CreateStyles(workbookpart);
                 // Получаем/создаем хранилище текстов для книги
-                SharedStringTablePart shareStringPart = spreadsheetDocument.WorkbookPart.GetPartsOfType<SharedStringTablePart>().Count() > 0
-                ? spreadsheetDocument.WorkbookPart.GetPartsOfType<SharedStringTablePart>().First()
-                : spreadsheetDocument.WorkbookPart.AddNewPart<SharedStringTablePart>();
+                SharedStringTablePart shareStringPart =
+               spreadsheetDocument.WorkbookPart.GetPartsOfType<SharedStringTablePart>().Count() > 0
+                ?
+               spreadsheetDocument.WorkbookPart.GetPartsOfType<SharedStringTablePart>().First()
+                :
+               spreadsheetDocument.WorkbookPart.AddNewPart<SharedStringTablePart>();
                 // Создаем SharedStringTable, если его нет
                 if (shareStringPart.SharedStringTable == null)
                 {
@@ -242,7 +245,8 @@ namespace GoWorkFactoryBusinessLogic.BusinessLogics
                 WorksheetPart worksheetPart = workbookpart.AddNewPart<WorksheetPart>();
                 worksheetPart.Worksheet = new Worksheet(new SheetData());
                 // Добавляем лист в книгу
-                Sheets sheets = spreadsheetDocument.WorkbookPart.Workbook.AppendChild<Sheets>(new Sheets());
+                Sheets sheets =
+               spreadsheetDocument.WorkbookPart.Workbook.AppendChild<Sheets>(new Sheets());
                 Sheet sheet = new Sheet()
                 {
                     Id = spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPart),
@@ -263,8 +267,52 @@ namespace GoWorkFactoryBusinessLogic.BusinessLogics
                 {
                     Worksheet = worksheetPart.Worksheet,
                     CellFromName = "A1",
-                    CellToName = "E1"
+                    CellToName = "C1"
                 });
+                uint rowIndex = 2;
+
+                InsertCellInWorksheet(new ExcelCellParameters
+                {
+                    Worksheet = worksheetPart.Worksheet,
+                    ShareStringPart = shareStringPart,
+                    ColumnName = "A",
+                    RowIndex = rowIndex,
+                    Text = "Название",
+                    StyleIndex = 0U
+                });
+                InsertCellInWorksheet(new ExcelCellParameters
+                {
+                    Worksheet = worksheetPart.Worksheet,
+                    ShareStringPart = shareStringPart,
+                    ColumnName = "B",
+                    RowIndex = rowIndex,
+                    Text = "Количество",
+                    StyleIndex = 0U
+                });
+                rowIndex++;
+
+                foreach (var material in info.Materials)
+                {
+                    InsertCellInWorksheet(new ExcelCellParameters
+                    {
+                        Worksheet = worksheetPart.Worksheet,
+                        ShareStringPart = shareStringPart,
+                        ColumnName = "A",
+                        RowIndex = rowIndex,
+                        Text = material.Item1,
+                        StyleIndex = 0U
+                    });
+                    InsertCellInWorksheet(new ExcelCellParameters
+                    {
+                        Worksheet = worksheetPart.Worksheet,
+                        ShareStringPart = shareStringPart,
+                        ColumnName = "B",
+                        RowIndex = rowIndex,
+                        Text = material.Item2.ToString(),
+                        StyleIndex = 0U
+                    });
+                    rowIndex++;
+                }
                 workbookpart.Workbook.Save();
             }
             return memoryStream;

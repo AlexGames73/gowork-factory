@@ -54,7 +54,7 @@ namespace GoWorkFactoryBusinessLogic.BusinessLogics
                         {
                             ContentType ct = new ContentType(x.ContentType);
                             Attachment attachment = new Attachment(x.FileData, ct);
-                            attachment.ContentDisposition.FileName = "report.";
+                            attachment.ContentDisposition.FileName = x.Name + ".";
                             switch (x.ContentType)
                             {
                                 case MimeTypes.Excel:

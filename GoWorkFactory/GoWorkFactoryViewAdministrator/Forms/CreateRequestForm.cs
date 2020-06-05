@@ -20,9 +20,12 @@ namespace GoWorkFactoryViewAdministrator.Forms
         [Dependency]
         public new IUnityContainer Container { get; set; }
         private Dictionary<int, (string, int)> materials;
-        public CreateRequestForm()
+        private readonly ReportLogic reportLogic;
+        public CreateRequestForm(ReportLogic reportLogic)
         {
             InitializeComponent();
+            this.reportLogic = reportLogic;
+            materials = new Dictionary<int, (string, int)>();
         }
 
         private void buttonAdd_Click(object sender, EventArgs e)
@@ -32,7 +35,7 @@ namespace GoWorkFactoryViewAdministrator.Forms
             {
                 if (materials.ContainsKey(form.Id))
                 {
-                    materials[form.Id] = (form.ComponentName, form.Count);
+                    materials[form.Id] = (form.ComponentName, materials[form.Id].Item2 + form.Count);
                 }
                 else
                 {
@@ -112,9 +115,9 @@ namespace GoWorkFactoryViewAdministrator.Forms
                MessageBoxIcon.Error);
                 return;
             }
-            if (comboBoxTypeFile.SelectedValue == null)
+            if (!(comboBoxTypeFile.SelectedIndex == 0 || comboBoxTypeFile.SelectedIndex == 1))
             {
-                MessageBox.Show("Выберите компонент", "Ошибка", MessageBoxButtons.OK,
+                MessageBox.Show("Выберите тип файла", "Ошибка", MessageBoxButtons.OK,
                MessageBoxIcon.Error);
                 return;
             }
@@ -126,23 +129,52 @@ namespace GoWorkFactoryViewAdministrator.Forms
             }
             try
             {
-                Stream file;
                 if (comboBoxTypeFile.SelectedIndex == 0)
                 {
                     using (var dialog = new SaveFileDialog { Filter = "docx|*.docx" })
                     {
                         if (dialog.ShowDialog() == DialogResult.OK)
                         {
-
-                            file = SaveToWord.CreateDocRequestComponents(new RequestComponentsInfo
+                            Stream file = reportLogic.SaveRequestMaterialsToDocFile(materials.Select(x => (x.Value.Item1, x.Value.Item2)).ToList());
+                            MailLogic.MailSendAsync(new MailSendInfo
                             {
-                                FileName = dialog.FileName,
-                                Title = "Заявка на материалы",
-                                Materials = materials.Select(x => (x.Value.Item1, x.Value.Item2)).ToList()
+                                MailAddress = textBoxEmail.Text,
+                                Subject = "Заявка на материалы",
+                                Text = "Прикреплен файл, нужный материалов",
+                                Attachments = new List<MailAttachment>
+                                {
+                                    new MailAttachment
+                                    {
+                                        ContentType = MimeTypes.Word,
+                                        FileData = file,
+                                        Name = "Завка на материалы"
+                                    }
+                                }
                             });
                         }
                     }
                 }
+                else if (comboBoxTypeFile.SelectedIndex == 1)
+                {
+                    Stream file = reportLogic.SaveRequestMaterialsToExcelFile(materials.Select(x => (x.Value.Item1, x.Value.Item2)).ToList());
+                    MailLogic.MailSendAsync(new MailSendInfo
+                    {
+                        MailAddress = textBoxEmail.Text,
+                        Subject = "Заявка на материалы",
+                        Text = "Прикреплен файл, нужный материалов",
+                        Attachments = new List<MailAttachment>
+                        {
+                            new MailAttachment
+                            {
+                                ContentType = MimeTypes.Excel,
+                                FileData = file,
+                                Name = "Завка на материалы"
+                            }
+                        }
+                    });
+                }
+
+
                 MessageBox.Show("Заявка отправленна", "Сообщение",
                MessageBoxButtons.OK, MessageBoxIcon.Information);
                 DialogResult = DialogResult.OK;

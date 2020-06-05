@@ -139,8 +139,8 @@
             // 
             this.comboBoxTypeFile.FormattingEnabled = true;
             this.comboBoxTypeFile.Items.AddRange(new object[] {
-            "Xml",
-            "Word"});
+            "Word",
+            "Xml"});
             this.comboBoxTypeFile.Location = new System.Drawing.Point(168, 392);
             this.comboBoxTypeFile.Name = "comboBoxTypeFile";
             this.comboBoxTypeFile.Size = new System.Drawing.Size(268, 24);
