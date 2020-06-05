@@ -3,15 +3,17 @@ using System;
 using GoWorkFactoryDataBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace GoWorkFactoryDataBase.Migrations
 {
     [DbContext(typeof(GoWorkFactoryDataBaseContext))]
-    partial class GoWorkFactoryDataBaseContextModelSnapshot : ModelSnapshot
+    [Migration("20200605162427_EmailConfirmation")]
+    partial class EmailConfirmation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

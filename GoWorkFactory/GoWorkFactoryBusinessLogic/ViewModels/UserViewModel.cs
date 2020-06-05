@@ -1,4 +1,5 @@
 ﻿using GoWorkFactoryBusinessLogic.Enums;
+using System;
 
 namespace GoWorkFactoryBusinessLogic.ViewModels
 {
@@ -9,5 +10,7 @@ namespace GoWorkFactoryBusinessLogic.ViewModels
         public string Password { get; set; }
         public string Email { get; set; }
         public UserRole Role { get; set; }
+        public string EmailToken { get; set; }
+        public bool EmailConfirmed { get; set; }
     }
 }

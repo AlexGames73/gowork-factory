@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GoWorkFactoryBusinessLogic.BusinessLogics;
+using GoWorkFactoryBusinessLogic.HelperModels;
 using GoWorkFactoryBusinessLogic.Interfaces;
 using GoWorkFactoryDataBase.Implementations;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -26,6 +28,7 @@ namespace GoWorkFactoryASPNET
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             services.AddTransient<IOrderLogic, OrderLogic>();
             services.AddTransient<IProductLogic, ProductLogic>();
             services.AddTransient<IUserLogic, UserLogic>();

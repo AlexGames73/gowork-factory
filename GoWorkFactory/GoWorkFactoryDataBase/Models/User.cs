@@ -1,4 +1,5 @@
 ﻿using GoWorkFactoryBusinessLogic.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -11,6 +12,8 @@ namespace GoWorkFactoryDataBase.Models
         public string Password { get; set; }
         public string Email { get; set; }
         public UserRole Role { get; set; }
+        public string EmailToken { get; set; }
+        public bool EmailConfirmed { get; set; }
 
         [ForeignKey("UserId")]
         public virtual List<Request> Requests { get; set; }

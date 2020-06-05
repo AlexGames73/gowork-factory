@@ -10,29 +10,14 @@ namespace GoWorkFactoryDataBase.Implementations
 {
     public class UserLogic : IUserLogic
     {
-        public void ChangeRole(ChangeUserRoleBindingModel model)
-        {
-            using (var context = new GoWorkFactoryDataBaseContext())
-            {
-                var user = context.Users.FirstOrDefault(x => x.Id == model.UserId);
-                if (user == null)
-                {
-                    throw new Exception("Такого пользователя не существует");
-                }
-
-                user.Role = model.Role;
-                context.SaveChanges();
-            }
-        }
-
         public void CreateOrUpdate(UserBindingModel model)
         {
             using (var context = new GoWorkFactoryDataBaseContext())
             {
-                var user = context.Users.FirstOrDefault(x => x.Username == model.Username && x.Id != model.Id);
+                var user = context.Users.FirstOrDefault(x => (x.Username == model.Username || x.Email == model.Email) && x.Id != model.Id);
                 if (user != null)
                 {
-                    throw new Exception("Пользователь с таким ником уже существует");
+                    throw new Exception("Пользователь с таким ником или почтой уже существует");
                 }
                 user = context.Users.FirstOrDefault(x => x.Id == model.Id);
                 if (user == null)
@@ -47,6 +32,9 @@ namespace GoWorkFactoryDataBase.Implementations
                 user.Username = model.Username;
                 user.Password = model.Password;
                 user.Email = model.Email;
+                user.EmailToken = model.EmailToken;
+                user.EmailConfirmed = model.EmailConfirmed;
+                user.Role = model.Role;
                 context.SaveChanges();
             }
         }
@@ -59,7 +47,8 @@ namespace GoWorkFactoryDataBase.Implementations
                     .Where(x => 
                         (model == null) || 
                         (x.Id == model.Id) ||
-                        (x.Username == model.Username && x.Password == model.Password)
+                        (x.Username == model.Username && x.Password == model.Password) ||
+                        (x.EmailToken == model.EmailToken)
                     )
                     .Select(x => new UserViewModel
                     {
@@ -67,7 +56,9 @@ namespace GoWorkFactoryDataBase.Implementations
                         Username = x.Username,
                         Password = x.Password,
                         Email = x.Email,
-                        Role = x.Role
+                        Role = x.Role,
+                        EmailConfirmed = x.EmailConfirmed,
+                        EmailToken = x.EmailToken
                     })
                     .ToList();
             }
