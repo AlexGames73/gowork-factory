@@ -5,6 +5,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using GoWorkFactoryBusinessLogic.HelperModels;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading;
 
@@ -13,10 +14,11 @@ namespace GoWorkFactoryBusinessLogic.BusinessLogics
     //for orders
     static class SaveToExcel
     {
-        public static void CreateDoc(ExcelInfo info)
+        public static Stream CreateDoc(ExcelInfo info)
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
-            using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Create(info.FileName, SpreadsheetDocumentType.Workbook))
+            MemoryStream memoryStream = new MemoryStream();
+            using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Create(memoryStream, SpreadsheetDocumentType.Workbook))
             {
                 // Создаем книгу (в ней хранятся листы)
                 WorkbookPart workbookpart = spreadsheetDocument.AddWorkbookPart();
@@ -60,6 +62,7 @@ namespace GoWorkFactoryBusinessLogic.BusinessLogics
                 });
                 workbookpart.Workbook.Save();
             }
+            return memoryStream;
         }
         /// <summary>
         /// Настройка стилей для файла

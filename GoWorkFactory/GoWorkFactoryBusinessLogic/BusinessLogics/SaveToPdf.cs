@@ -4,6 +4,7 @@ using MigraDoc.DocumentObjectModel.Tables;
 using MigraDoc.Rendering;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Threading;
 
 namespace GoWorkFactoryBusinessLogic.BusinessLogics
@@ -11,7 +12,7 @@ namespace GoWorkFactoryBusinessLogic.BusinessLogics
     //for plane parts
     static class SaveToPdf
     {
-        public static void CreateDoc(PdfInfo info)
+        public static Stream CreateDoc(PdfInfo info)
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
             Document document = new Document();
@@ -39,7 +40,9 @@ namespace GoWorkFactoryBusinessLogic.BusinessLogics
                 Document = document
             };
             renderer.RenderDocument();
-            renderer.PdfDocument.Save(info.FileName);
+            MemoryStream memoryStream = new MemoryStream();
+            renderer.PdfDocument.Save(memoryStream);
+            return memoryStream;
         }
         /// <summary>
         /// Создание стилей для документа

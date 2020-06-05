@@ -4,6 +4,7 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using GoWorkFactoryBusinessLogic.HelperModels;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Threading;
 
 namespace GoWorkFactoryBusinessLogic.BusinessLogics
@@ -14,10 +15,11 @@ namespace GoWorkFactoryBusinessLogic.BusinessLogics
         /// Создание документа
         /// </summary>
         /// <param name="info"></param>
-        public static void CreateDoc(WordInfo info)
+        public static Stream CreateDoc(WordInfo info)
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
-            using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(info.FileName, WordprocessingDocumentType.Document))
+            MemoryStream memoryStream = new MemoryStream();
+            using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(memoryStream, WordprocessingDocumentType.Document))
             {
                 MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
                 mainPart.Document = new Document();
@@ -37,6 +39,7 @@ namespace GoWorkFactoryBusinessLogic.BusinessLogics
                 docBody.AppendChild(CreateSectionProperties());
                 wordDocument.MainDocumentPart.Document.Save();
             }
+            return memoryStream;
         }
         /// <summary>
         /// Настройки страницы
