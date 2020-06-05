@@ -32,6 +32,7 @@ namespace GoWorkFactoryASPNET
             services.AddTransient<IOrderLogic, OrderLogic>();
             services.AddTransient<IProductLogic, ProductLogic>();
             services.AddTransient<IUserLogic, UserLogic>();
+            services.AddTransient<ReportLogic>();
             services.AddControllersWithViews();
 
             // установка конфигурации подключения

@@ -55,7 +55,7 @@ namespace GoWorkFactoryASPNET.Controllers
 
                 if (user != null)
                 {
-                    await Authenticate(user.Username, user.Id); // аутентификация
+                    await Authenticate(user.Username, user.Id, user.Email); // аутентификация
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -139,13 +139,14 @@ namespace GoWorkFactoryASPNET.Controllers
             return Redirect("Login");
         }
 
-        private async Task Authenticate(string userName, int userId)
+        private async Task Authenticate(string userName, int userId, string email)
         {
             // создаем один claim
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, userName),
-                new Claim(ClaimTypes.NameIdentifier, userId.ToString())
+                new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+                new Claim(ClaimTypes.Email, email)
             };
             // создаем объект ClaimsIdentity
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);

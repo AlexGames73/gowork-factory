@@ -28,21 +28,21 @@
     <tbody>
         @for (int i = 0; i < Model.Count; i++)
         {
-            <tr>
-                <td>
-                    <div class="form-check">
-                        <input class="select-item form-check-input position-static" type="checkbox" id="@("checkbox" + i)">
-                    </div>
-                </td>
-                <td id="@("IDcheckbox" + i)" class="@Model[i].Id">@i</td>
-                <td>@Model[i].SerialNumber</td>
-                <td>@Model[i].DeliveryDate</td>
-                <td>@Model[i].DeliveryAddress</td>
-                <td>@Model[i].Products.Sum(x => x.Count * x.Price)</td>
-                <td>@Model[i].Reverved</td>
-                <td scope="row"><a class="btn btn-danger" asp-action="DeleteOrder" asp-controller="Home" asp-route-orderId="@Model[i].Id">&times;</a></td>
-                <td scope="row"><a class="btn @if (Model[i].Reverved) {<text>btn-outline-light disabled</text>} else {<text>btn-outline-warning</text>} " asp-action="EditOrder" asp-controller="Home" asp-route-orderId="@Model[i].Id">&hellip;</a></td>
-            </tr>
+        <tr>
+            <td>
+                <div class="form-check">
+                    <input class="select-item form-check-input position-static" type="checkbox" id="@("checkbox" + i)">
+                </div>
+            </td>
+            <td id="@("IDcheckbox" + i)" class="@Model[i].Id">@i</td>
+            <td>@Model[i].SerialNumber</td>
+            <td>@Model[i].DeliveryDate</td>
+            <td>@Model[i].DeliveryAddress</td>
+            <td>@Model[i].Products.Sum(x => x.Count * x.Price)</td>
+            <td>@Model[i].Reverved</td>
+            <td scope="row"><a class="btn btn-danger" asp-action="DeleteOrder" asp-controller="Home" asp-route-orderId="@Model[i].Id">&times;</a></td>
+            <td scope="row"><a class="btn @if (Model[i].Reverved) {<text>btn-outline-light disabled</text>} else {<text>btn-outline-warning</text>} " asp-action="EditOrder" asp-controller="Home" asp-route-orderId="@Model[i].Id">&hellip;</a></td>
+        </tr>
         }
     </tbody>
 </table>
@@ -50,6 +50,14 @@
 <div class="d-flex justify-content-center">
     <button class="reserve-btn btn btn-success" style="margin: 1rem">Зарезервировать выделенное</button>
     <button class="unreserve-btn btn btn-danger" style="margin: 1rem">Отменить резервирование</button>
+</div>
+<br />
+<div class="d-flex justify-content-center">
+    <p class="lead">Отправить отчет по выделенным заказам на почту в формате</p>
+</div>
+<div class="d-flex justify-content-center">
+    <button class="xls-report-btn btn btn-primary" style="margin: 1rem">Excel</button>
+    <button class="doc-report-btn btn btn-primary" style="margin: 1rem">Word</button>
 </div>
 
 @section Scripts {
@@ -89,6 +97,34 @@
                 });
             })
 
+            $(".xls-report-btn").click(function () {
+                var table = document.getElementsByClassName("table")[0];
+                var rows = table.tBodies[0].rows;
+                var res = []
+                for (var i = 0; i < rows.length; i++) {
+                    if (JSON.parse(rows[i].cells[6].innerText.toLowerCase()) && rows[i].getElementsByClassName("select-item")[0].checked) {
+                        res.push(rows[i].cells[1].className);
+                    }
+                }
+                $.post("/Home/ExcelReport").done(function () {
+                    location.href = "/";
+                });
+            })
+
+            $(".doc-report-btn").click(function () {
+                var table = document.getElementsByClassName("table")[0];
+                var rows = table.tBodies[0].rows;
+                var res = []
+                for (var i = 0; i < rows.length; i++) {
+                    if (JSON.parse(rows[i].cells[6].innerText.toLowerCase()) && rows[i].getElementsByClassName("select-item")[0].checked) {
+                        res.push(rows[i].cells[1].className);
+                    }
+                }
+                $.post("/Home/WordReport").done(function () {
+                    location.href = "/";
+                });
+            })
+
             $("input.select-all").click(function () {
                 var all = $("input.select-all")[0];
                 var checked = all.checked;
@@ -103,7 +139,7 @@
                 var res = true;
                 for (var i = 0; i < items.length; i++) {
                     res = res && items[i].checked;
-                } 
+                }
                 all.checked = res;
             });
         });
