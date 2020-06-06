@@ -63,9 +63,10 @@ namespace GoWorkFactoryDataBase.Implementations
             {
                 return context.Orders
                     .Include(x => x.ProductOrders)
-                        .ThenInclude(x => x.Product)
+                    .ThenInclude(x => x.Product)
                     .Include(x => x.User)
-                    .Where(x => model == null || x.Id == model.Id || x.UserId == model.UserId)
+                    .Where(x => model == null || x.Id == model.Id || x.UserId == model.UserId
+                    || (model.DateFrom.HasValue && model.DateTo.HasValue && x.DeliveryDate >= model.DateFrom && x.DeliveryDate <= model.DateTo))
                     .Select(GetViewModel)
                     .ToList();
             }

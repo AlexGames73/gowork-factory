@@ -9,5 +9,7 @@ namespace GoWorkFactoryBusinessLogic.BindingModels
         public DateTime DeliveryDate { get; set; }
         public string DeliveryAddress { get; set; }
         public bool Reserved { get; set; }
+        public DateTime? DateFrom { get; set; }
+        public DateTime? DateTo { get; set; }
     }
 }

@@ -58,8 +58,9 @@ namespace GoWorkFactoryDataBase.Implementations
             {
                 return context.Requests
                 .Include(rec => rec.MaterialRequests)
-                    .ThenInclude(rec => rec.Material)
-                .Where(rec => model == null || rec.Id == model.Id)
+                .ThenInclude(rec => rec.Material)
+                .Where(rec => model == null || rec.Id == model.Id
+                || (model.DateFrom.HasValue && model.DateTo.HasValue && rec.Date >= model.DateFrom && rec.Date <= model.DateTo))
                 .Select(GetViewModel)
                 .ToList();
             }
@@ -92,7 +93,7 @@ namespace GoWorkFactoryDataBase.Implementations
                 Id = request.Id,
                 UserId = request.UserId,
                 Date = request.Date,
-                Materials = request.MaterialRequests.ToDictionary(recPC => recPC.MaterialId, recPC => (recPC.Count, recPC.Price))
+                Materials = request.MaterialRequests.ToDictionary(recPC => recPC.MaterialId, recPC => (recPC.Material.Name, recPC.Count, recPC.Price))
             };
         }
     }

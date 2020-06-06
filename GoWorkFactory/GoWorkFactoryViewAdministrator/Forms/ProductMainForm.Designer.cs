@@ -35,6 +35,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.материалыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.оформитьЗаявкуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.отчетПоЗаявкамИЗаказамToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -84,7 +85,8 @@
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.материалыToolStripMenuItem,
-            this.оформитьЗаявкуToolStripMenuItem});
+            this.оформитьЗаявкуToolStripMenuItem,
+            this.отчетПоЗаявкамИЗаказамToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(800, 28);
@@ -104,6 +106,13 @@
             this.оформитьЗаявкуToolStripMenuItem.Size = new System.Drawing.Size(145, 24);
             this.оформитьЗаявкуToolStripMenuItem.Text = "Оформить заявку";
             this.оформитьЗаявкуToolStripMenuItem.Click += new System.EventHandler(this.оформитьЗаявкуToolStripMenuItem_Click);
+            // 
+            // отчетПоЗаявкамИЗаказамToolStripMenuItem
+            // 
+            this.отчетПоЗаявкамИЗаказамToolStripMenuItem.Name = "отчетПоЗаявкамИЗаказамToolStripMenuItem";
+            this.отчетПоЗаявкамИЗаказамToolStripMenuItem.Size = new System.Drawing.Size(218, 24);
+            this.отчетПоЗаявкамИЗаказамToolStripMenuItem.Text = "Отчет по заявкам и заказам";
+            this.отчетПоЗаявкамИЗаказамToolStripMenuItem.Click += new System.EventHandler(this.отчетПоЗаявкамИЗаказамToolStripMenuItem_Click);
             // 
             // ProductMainForm
             // 
@@ -136,5 +145,6 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem материалыToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem оформитьЗаявкуToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem отчетПоЗаявкамИЗаказамToolStripMenuItem;
     }
 }

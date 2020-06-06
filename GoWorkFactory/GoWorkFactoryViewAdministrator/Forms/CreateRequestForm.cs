@@ -1,5 +1,7 @@
-﻿using GoWorkFactoryBusinessLogic.BusinessLogics;
+﻿using GoWorkFactoryBusinessLogic.BindingModels;
+using GoWorkFactoryBusinessLogic.BusinessLogics;
 using GoWorkFactoryBusinessLogic.HelperModels;
+using GoWorkFactoryBusinessLogic.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,27 +21,29 @@ namespace GoWorkFactoryViewAdministrator.Forms
     {
         [Dependency]
         public new IUnityContainer Container { get; set; }
-        private Dictionary<int, (string, int)> materials;
+        private Dictionary<int, (string, int, int)> materials;
         private readonly ReportLogic reportLogic;
-        public CreateRequestForm(ReportLogic reportLogic)
+        private readonly IRequestLogic requestLogic;
+        public CreateRequestForm(ReportLogic reportLogic, IRequestLogic requestLogic)
         {
             InitializeComponent();
             this.reportLogic = reportLogic;
-            materials = new Dictionary<int, (string, int)>();
+            materials = new Dictionary<int, (string, int, int)>();
+            this.requestLogic = requestLogic;
         }
 
         private void buttonAdd_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<ProductMaterialForm>();
+            var form = Container.Resolve<AddMaterialRequestForm>();
             if (form.ShowDialog() == DialogResult.OK)
             {
                 if (materials.ContainsKey(form.Id))
                 {
-                    materials[form.Id] = (form.ComponentName, materials[form.Id].Item2 + form.Count);
+                    materials[form.Id] = (form.ComponentName, materials[form.Id].Item2 + form.Count, form.Price);
                 }
                 else
                 {
-                    materials.Add(form.Id, (form.ComponentName, form.Count));
+                    materials.Add(form.Id, (form.ComponentName, form.Count, form.Price));
                 }
                 LoadData();
             }
@@ -54,7 +58,7 @@ namespace GoWorkFactoryViewAdministrator.Forms
                     dataGridView.Rows.Clear();
                     foreach (var pc in materials)
                     {
-                        dataGridView.Rows.Add(new object[] { pc.Key, pc.Value.Item1, pc.Value.Item2 });
+                        dataGridView.Rows.Add(new object[] { pc.Key, pc.Value.Item1, pc.Value.Item2 , pc.Value.Item3 });
                     }
                 }
             }
@@ -68,13 +72,13 @@ namespace GoWorkFactoryViewAdministrator.Forms
         {
             if (dataGridView.SelectedRows.Count == 1)
             {
-                var form = Container.Resolve<ProductMaterialForm>();
+                var form = Container.Resolve<AddMaterialRequestForm>();
                 int id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
                 form.Id = id;
                 form.Count = materials[id].Item2;
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    materials[form.Id] = (form.ComponentName, form.Count);
+                    materials[form.Id] = (form.ComponentName, form.Count, form.Price);
                     LoadData();
                 }
             }
@@ -131,28 +135,29 @@ namespace GoWorkFactoryViewAdministrator.Forms
             {
                 if (comboBoxTypeFile.SelectedIndex == 0)
                 {
-                    using (var dialog = new SaveFileDialog { Filter = "docx|*.docx" })
+                    Stream file = reportLogic.SaveRequestMaterialsToDocFile(materials.Select(x => (x.Value.Item1, x.Value.Item2)).ToList());
+                    MailLogic.MailSendAsync(new MailSendInfo
                     {
-                        if (dialog.ShowDialog() == DialogResult.OK)
+                        MailAddress = textBoxEmail.Text,
+                        Subject = "Заявка на материалы",
+                        Text = "Прикреплен файл, нужный материалов",
+                        Attachments = new List<MailAttachment>
                         {
-                            Stream file = reportLogic.SaveRequestMaterialsToDocFile(materials.Select(x => (x.Value.Item1, x.Value.Item2)).ToList());
-                            MailLogic.MailSendAsync(new MailSendInfo
+                            new MailAttachment
                             {
-                                MailAddress = textBoxEmail.Text,
-                                Subject = "Заявка на материалы",
-                                Text = "Прикреплен файл, нужный материалов",
-                                Attachments = new List<MailAttachment>
-                                {
-                                    new MailAttachment
-                                    {
-                                        ContentType = MimeTypes.Word,
-                                        FileData = file,
-                                        Name = "Завка на материалы"
-                                    }
-                                }
-                            });
+                                ContentType = MimeTypes.Word,
+                                FileData = file,
+                                Name = "Завка на материалы"
+                            }
                         }
-                    }
+                    });
+
+                    requestLogic.CreateOrUpdate(new RequestBindingModel
+                    {
+                        Date = DateTime.Now,
+                        UserId = Program.Admin.Id,
+                        Materials = materials.ToDictionary(x => x.Key, y => (y.Value.Item2, y.Value.Item3))
+                    });
                 }
                 else if (comboBoxTypeFile.SelectedIndex == 1)
                 {
@@ -171,6 +176,13 @@ namespace GoWorkFactoryViewAdministrator.Forms
                                 Name = "Завка на материалы"
                             }
                         }
+                    });
+
+                    requestLogic.CreateOrUpdate(new RequestBindingModel
+                    {
+                        Date = DateTime.Now,
+                        UserId = Program.Admin.Id,
+                        Materials = materials.ToDictionary(x => x.Key, y => (y.Value.Item2, y.Value.Item3))
                     });
                 }
 

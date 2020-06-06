@@ -9,6 +9,6 @@ namespace GoWorkFactoryBusinessLogic.ViewModels
         public int Id { get; set; }
         public int UserId { get; set; }
         public DateTime Date { get; set; }
-        public Dictionary<int, (int, int)> Materials { get; set; }
+        public Dictionary<int, (string, int, int)> Materials { get; set; }
     }
 }

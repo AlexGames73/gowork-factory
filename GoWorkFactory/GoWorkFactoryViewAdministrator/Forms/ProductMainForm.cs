@@ -104,5 +104,11 @@ namespace GoWorkFactoryViewAdministrator.Forms
             var form = Container.Resolve<CreateRequestForm>();
             form.ShowDialog();
         }
+
+        private void отчетПоЗаявкамИЗаказамToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = Container.Resolve<ReportForm>();
+            form.ShowDialog();
+        }
     }
 }
