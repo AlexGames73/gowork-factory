@@ -10,8 +10,6 @@ namespace GoWorkFactoryBusinessLogic.ViewModels
         public int UserId { get; set; }
         [DisplayName("Пользователь")]
         public string Username { get; set; }
-        [DisplayName("Номер заказа")]
-        public string SerialNumber { get; set; }
         [DisplayName("Дата доставки")]
         public DateTime DeliveryDate { get; set; }
         [DisplayName("Адрес доставки")]

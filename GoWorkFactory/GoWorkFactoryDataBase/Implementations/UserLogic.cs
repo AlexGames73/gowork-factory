@@ -2,6 +2,7 @@
 using GoWorkFactoryBusinessLogic.Enums;
 using GoWorkFactoryBusinessLogic.Interfaces;
 using GoWorkFactoryBusinessLogic.ViewModels;
+using GoWorkFactoryDataBase.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace GoWorkFactoryDataBase.Implementations
 {
     public class UserLogic : IUserLogic
     {
-        public void CreateOrUpdate(UserBindingModel model)
+        public UserViewModel CreateOrUpdate(UserBindingModel model)
         {
             using (var context = new GoWorkFactoryDataBaseContext())
             {
@@ -36,6 +37,7 @@ namespace GoWorkFactoryDataBase.Implementations
                 user.EmailConfirmed = model.EmailConfirmed;
                 user.Role = model.Role;
                 context.SaveChanges();
+                return GetViewModel(user);
             }
         }
 
@@ -50,16 +52,7 @@ namespace GoWorkFactoryDataBase.Implementations
                         (x.Username == model.Username && x.Password == model.Password) ||
                         (x.EmailToken == model.EmailToken)
                     )
-                    .Select(x => new UserViewModel
-                    {
-                        Id = x.Id,
-                        Username = x.Username,
-                        Password = x.Password,
-                        Email = x.Email,
-                        Role = x.Role,
-                        EmailConfirmed = x.EmailConfirmed,
-                        EmailToken = x.EmailToken
-                    })
+                    .Select(GetViewModel)
                     .ToList();
             }
         }
@@ -77,6 +70,20 @@ namespace GoWorkFactoryDataBase.Implementations
                 context.Users.Remove(user);
                 context.SaveChanges();
             }
+        }
+
+        private UserViewModel GetViewModel(User user)
+        {
+            return new UserViewModel
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Password = user.Password,
+                Email = user.Email,
+                Role = user.Role,
+                EmailConfirmed = user.EmailConfirmed,
+                EmailToken = user.EmailToken
+            };
         }
     }
 }

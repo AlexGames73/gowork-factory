@@ -105,7 +105,7 @@ namespace GoWorkFactoryBusinessLogic.BusinessLogics
                         ShareStringPart = shareStringPart,
                         ColumnName = "A",
                         RowIndex = row,
-                        Text = group.Key,
+                        Text = group.Key.ToString(),
                         StyleIndex = 2U
                     });
                     row++;

@@ -12,8 +12,7 @@ namespace GoWorkFactoryDataBase.Implementations
 {
     public class ProductLogic : IProductLogic
     {
-
-        public void CreateOrUpdate(ProductBindingModel model)
+        public ProductViewModel CreateOrUpdate(ProductBindingModel model)
         {
             using (var context = new GoWorkFactoryDataBaseContext())
             {
@@ -75,6 +74,7 @@ namespace GoWorkFactoryDataBase.Implementations
                             context.SaveChanges();
                         }
                         transaction.Commit();
+                        return GetViewModel(element);
                     }
                     catch (Exception)
                     {
@@ -90,23 +90,15 @@ namespace GoWorkFactoryDataBase.Implementations
             using (var context = new GoWorkFactoryDataBaseContext())
             {
                 return context.Products
-                .Where(rec => model == null || rec.Id == model.Id)
-                .ToList()
-               .Select(rec => new ProductViewModel
-               {
-                   Id = rec.Id,
-                   Name = rec.Name,
-                   Price = rec.Price,
-                   Count = rec.Count,
-                   Materials = context.MaterialProducts
-                .Include(recPC => recPC.Material)
-                .Where(recPC => recPC.ProductId == rec.Id)
-                .ToDictionary(recPC => recPC.MaterialId, recPC =>
-                (recPC.Material?.Name, recPC.MaterialAmount))
-               }).ToList();
+                    .Include(rec => rec.MaterialProducts)
+                        .ThenInclude(rec => rec.Material)
+                    .Where(rec => model == null || rec.Id == model.Id)
+                    .ToList()
+                    .Select(GetViewModel)
+                    .ToList();
             }
         }
-        
+
         public void Remove(ProductBindingModel model)
         {
             using (var context = new GoWorkFactoryDataBaseContext())
@@ -125,6 +117,18 @@ namespace GoWorkFactoryDataBase.Implementations
                     throw new Exception("Элемент не найден");
                 }
             }
+        }
+
+        private ProductViewModel GetViewModel(Product product)
+        {
+            return new ProductViewModel
+            {
+                Id = product.Id,
+                Count = product.Count,
+                Materials = product.MaterialProducts?.ToDictionary(recPC => recPC.MaterialId, recPC => (recPC.Material?.Name, recPC.MaterialAmount)),
+                Name = product.Name,
+                Price = product.Price
+            };
         }
     }
 }

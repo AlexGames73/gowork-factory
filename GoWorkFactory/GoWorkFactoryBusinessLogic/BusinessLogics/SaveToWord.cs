@@ -102,7 +102,7 @@ namespace GoWorkFactoryBusinessLogic.BusinessLogics
                     tc4 = new TableCell();
                     tc1.AppendChild(CreateParagraph(new WordParagraph
                     {
-                        Texts = new List<WordText> { order.Key },
+                        Texts = new List<WordText> { order.Key.ToString() },
                         Properties = new WordParagraphProperties
                         {
                             Bold = true,

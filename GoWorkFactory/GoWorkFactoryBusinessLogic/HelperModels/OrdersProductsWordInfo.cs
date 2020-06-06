@@ -9,6 +9,6 @@ namespace GoWorkFactoryBusinessLogic.HelperModels
     public class OrdersProductsWordInfo
     {
         public string Title { get; set; }
-        public List<IGrouping<string, ReportOrdersProductsViewModel>> OrdersProducts { get; set; }
+        public List<IGrouping<int, ReportOrdersProductsViewModel>> OrdersProducts { get; set; }
     }
 }

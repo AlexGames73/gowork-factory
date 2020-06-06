@@ -32,23 +32,28 @@ namespace GoWorkFactoryDataBase.Implementations
             }
         }
 
-        public void CreateOrUpdate(OrderBindingModel model)
+        public OrderViewModel CreateOrUpdate(OrderBindingModel model)
         {
             using (var context = new GoWorkFactoryDataBaseContext())
             {
-                var order = context.Orders.FirstOrDefault(x => x.Id == model.Id);
+                var order = context.Orders
+                    .Include(x => x.User)
+                    .Include(x => x.ProductOrders)
+                        .ThenInclude(x => x.Product)
+                    .FirstOrDefault(x => x.Id == model.Id);
                 if (order == null)
                 {
                     order = new Order();
                     context.Orders.Add(order);
                 }
 
-                order.SerialNumber = model.SerialNumber;
                 order.UserId = model.UserId.Value;
                 order.DeliveryDate = model.DeliveryDate;
                 order.DeliveryAddress = model.DeliveryAddress;
                 order.Reserved = model.Reserved;
                 context.SaveChanges();
+
+                return GetViewModel(order);
             }
         }
 
@@ -60,31 +65,10 @@ namespace GoWorkFactoryDataBase.Implementations
                     .Include(x => x.ProductOrders)
                         .ThenInclude(x => x.Product)
                     .Include(x => x.User)
-                    .Where(x => model == null || x.Id == model.Id || x.UserId == model.UserId || x.SerialNumber == model.SerialNumber)
-                    .Select(OrderToViewModel)
+                    .Where(x => model == null || x.Id == model.Id || x.UserId == model.UserId)
+                    .Select(GetViewModel)
                     .ToList();
             }
-        }
-
-        private OrderViewModel OrderToViewModel(Order x)
-        {
-            return new OrderViewModel
-            {
-                Id = x.Id,
-                SerialNumber = x.SerialNumber,
-                DeliveryDate = x.DeliveryDate,
-                DeliveryAddress = x.DeliveryAddress,
-                UserId = x.UserId,
-                Username = x.User.Username,
-                Reverved = x.Reserved,
-                Products = x.ProductOrders.Select(y => new ProductViewModel
-                {
-                    Id = y.Product.Id,
-                    Name = y.Product.Name,
-                    Price = y.Product.Price,
-                    Count = y.ProductAmount
-                }).ToList()
-            };
         }
 
         public void Remove(OrderBindingModel model)
@@ -130,6 +114,26 @@ namespace GoWorkFactoryDataBase.Implementations
                 order.Reserved = model.Reserved;
                 context.SaveChanges();
             }
+        }
+
+        public OrderViewModel GetViewModel(Order order)
+        {
+            return new OrderViewModel
+            {
+                DeliveryAddress = order.DeliveryAddress,
+                DeliveryDate = order.DeliveryDate,
+                Id = order.Id,
+                Products = order.ProductOrders.Select(y => new ProductViewModel
+                {
+                    Id = y.Product.Id,
+                    Name = y.Product.Name,
+                    Price = y.Product.Price,
+                    Count = y.ProductAmount
+                }).ToList(),
+                Reverved = order.Reserved,
+                UserId = order.UserId,
+                Username = order.User.Username
+            };
         }
     }
 }

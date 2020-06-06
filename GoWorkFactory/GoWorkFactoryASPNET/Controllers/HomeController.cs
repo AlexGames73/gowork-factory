@@ -46,17 +46,12 @@ namespace GoWorkFactoryASPNET.Controllers
         public IActionResult CreateOrder()
         {
             int userId = int.Parse(User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value);
-            string guid = Guid.NewGuid().ToString();
-            while (orderLogic.Read(new OrderBindingModel { SerialNumber = guid }).Count() > 0)
-                guid = Guid.NewGuid().ToString();
-            orderLogic.CreateOrUpdate(new OrderBindingModel
+            ViewBag.Order = orderLogic.CreateOrUpdate(new OrderBindingModel
             {
                 UserId = userId,
-                SerialNumber = guid,
                 DeliveryDate = DateTime.Now,
                 DeliveryAddress = "Address"
             });
-            ViewBag.Order = orderLogic.Read(new OrderBindingModel { SerialNumber = guid }).FirstOrDefault();
             return View();
         }
 
@@ -65,7 +60,6 @@ namespace GoWorkFactoryASPNET.Controllers
             orderLogic.CreateOrUpdate(new OrderBindingModel
             {
                 Id = order.Id,
-                SerialNumber = order.SerialNumber,
                 UserId = order.UserId,
                 DeliveryDate = order.DeliveryDate,
                 DeliveryAddress = order.DeliveryAddress
@@ -125,7 +119,8 @@ namespace GoWorkFactoryASPNET.Controllers
                     new MailAttachment
                     {
                         ContentType = MimeTypes.Excel,
-                        FileData = reportLogic.SaveOrdersProductsToExcelFile(userId)
+                        FileData = reportLogic.SaveOrdersProductsToExcelFile(userId),
+                        Name = "ОтчетПоЗаказам"
                     }
                 }
             });
@@ -146,7 +141,8 @@ namespace GoWorkFactoryASPNET.Controllers
                     new MailAttachment
                     {
                         ContentType = MimeTypes.Word,
-                        FileData = reportLogic.SaveOrdersProductsToWordFile(userId)
+                        FileData = reportLogic.SaveOrdersProductsToWordFile(userId),
+                        Name = "ОтчетПоЗаказам"
                     }
                 }
             });

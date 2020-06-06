@@ -18,17 +18,17 @@ namespace GoWorkFactoryBusinessLogic.BusinessLogics
             this.orderLogic = orderLogic;
         }
 
-        public List<IGrouping<string, ReportOrdersProductsViewModel>> GetOrdersProducts(int userId)
+        public List<IGrouping<int, ReportOrdersProductsViewModel>> GetOrdersProducts(int userId)
         {
             return orderLogic.Read(new OrderBindingModel { UserId = userId })
                 .SelectMany(x => x.Products.Select(y => new ReportOrdersProductsViewModel
                 {
-                    OrderSerialNumber = x.SerialNumber,
+                    OrderId = x.Id,
                     ProductName = y.Name,
                     Count = y.Count,
                     Price = y.Price
                 }))
-                .GroupBy(x => x.OrderSerialNumber)
+                .GroupBy(x => x.OrderId)
                 .ToList();
         }
 

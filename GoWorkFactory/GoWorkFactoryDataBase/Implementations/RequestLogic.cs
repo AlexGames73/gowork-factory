@@ -12,13 +12,14 @@ namespace GoWorkFactoryDataBase.Implementations
 {
     public class RequestLogic : IRequestLogic
     {
-        public void CreateOrUpdate(RequestBindingModel model)
+        public RequestViewModel CreateOrUpdate(RequestBindingModel model)
         {
             using (var context = new GoWorkFactoryDataBaseContext())
             {
+                Request element;
                 if (model.Id.HasValue)
                 {
-                    Request element = context.Requests.FirstOrDefault(rec => rec.Id == model.Id);
+                    element = context.Requests.FirstOrDefault(rec => rec.Id == model.Id);
                     if (element != null)
                     {
                         throw new Exception("Заявку нельзя изменить");
@@ -26,7 +27,7 @@ namespace GoWorkFactoryDataBase.Implementations
                 }
                 else
                 {
-                    Request element = new Request
+                    element = new Request
                     {
                         UserId = model.UserId,
                         Date = model.Date
@@ -47,6 +48,7 @@ namespace GoWorkFactoryDataBase.Implementations
                     }
                 }
                 context.SaveChanges();
+                return GetViewModel(element);
             }
         }
 
@@ -55,19 +57,11 @@ namespace GoWorkFactoryDataBase.Implementations
             using (var context = new GoWorkFactoryDataBaseContext())
             {
                 return context.Requests
+                .Include(rec => rec.MaterialRequests)
+                    .ThenInclude(rec => rec.Material)
                 .Where(rec => model == null || rec.Id == model.Id)
-                .ToList()
-               .Select(rec => new RequestViewModel
-               {
-                   Id = rec.Id,
-                   UserId = rec.UserId,
-                   Date = rec.Date,
-                   Materials = context.MaterialRequests
-                .Include(recPC => recPC.Material)
-                .Where(recPC => recPC.RequestId == rec.Id)
-                .ToDictionary(recPC => recPC.MaterialId, recPC =>
-                (recPC.Count, recPC.Price))
-               }).ToList();
+                .Select(GetViewModel)
+                .ToList();
             }
         }
 
@@ -89,6 +83,17 @@ namespace GoWorkFactoryDataBase.Implementations
                     throw new Exception("Элемент не найден");
                 }
             }
+        }
+
+        private RequestViewModel GetViewModel(Request request)
+        {
+            return new RequestViewModel
+            {
+                Id = request.Id,
+                UserId = request.UserId,
+                Date = request.Date,
+                Materials = request.MaterialRequests.ToDictionary(recPC => recPC.MaterialId, recPC => (recPC.Count, recPC.Price))
+            };
         }
     }
 }

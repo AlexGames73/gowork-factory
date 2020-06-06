@@ -11,7 +11,7 @@ namespace GoWorkFactoryDataBase.Implementations
     public class MaterialLogic : IMaterialLogic
     {
 
-        public void CreateOrUpdate(MaterialBindingModel model)
+        public MaterialViewModel CreateOrUpdate(MaterialBindingModel model)
         {
             using (var context = new GoWorkFactoryDataBaseContext())
             {
@@ -41,6 +41,7 @@ namespace GoWorkFactoryDataBase.Implementations
                 }
 
                 context.SaveChanges();
+                return GetViewModel(element);
             }
         }
 
@@ -50,12 +51,7 @@ namespace GoWorkFactoryDataBase.Implementations
             {
                 return context.Materials
                 .Where(rec => model == null || rec.Id == model.Id)
-                .Select(rec => new MaterialViewModel
-                {
-                    Id = rec.Id,
-                    NameMaterial = rec.Name,
-                    CountMaterial = rec.Count
-                })
+                .Select(GetViewModel)
                 .ToList();
             }
         }
@@ -75,6 +71,16 @@ namespace GoWorkFactoryDataBase.Implementations
                     throw new Exception("Элемент не найден");
                 }
             }
+        }
+
+        private MaterialViewModel GetViewModel(Material material)
+        {
+            return new MaterialViewModel
+            {
+                Id = material.Id,
+                CountMaterial = material.Count,
+                NameMaterial = material.Name
+            };
         }
     }
 }
