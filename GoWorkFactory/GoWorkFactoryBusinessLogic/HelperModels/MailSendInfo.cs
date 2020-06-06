@@ -10,6 +10,7 @@ namespace GoWorkFactoryBusinessLogic.HelperModels
 
         public string Subject { get; set; }
         public string Text { get; set; }
+        public bool IsBodyHtml { get; set; }
 
         public List<MailAttachment> Attachments { get; set; }
     }

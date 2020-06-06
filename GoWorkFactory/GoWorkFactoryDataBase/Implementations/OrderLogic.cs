@@ -1,4 +1,5 @@
 ﻿using GoWorkFactoryBusinessLogic.BindingModels;
+using GoWorkFactoryBusinessLogic.Enums;
 using GoWorkFactoryBusinessLogic.Interfaces;
 using GoWorkFactoryBusinessLogic.ViewModels;
 using GoWorkFactoryDataBase.Models;
@@ -32,7 +33,7 @@ namespace GoWorkFactoryDataBase.Implementations
             }
         }
 
-        public OrderViewModel CreateOrUpdate(OrderBindingModel model)
+        public int CreateOrUpdate(OrderBindingModel model)
         {
             using (var context = new GoWorkFactoryDataBaseContext())
             {
@@ -51,9 +52,10 @@ namespace GoWorkFactoryDataBase.Implementations
                 order.DeliveryDate = model.DeliveryDate;
                 order.DeliveryAddress = model.DeliveryAddress;
                 order.Reserved = model.Reserved;
+                order.Status = model.Status;
                 context.SaveChanges();
 
-                return GetViewModel(order);
+                return order.Id;
             }
         }
 
@@ -113,6 +115,7 @@ namespace GoWorkFactoryDataBase.Implementations
                 }
 
                 order.Reserved = model.Reserved;
+                order.Status = OrderStatus.Зарезервирован;
                 context.SaveChanges();
             }
         }
@@ -133,7 +136,8 @@ namespace GoWorkFactoryDataBase.Implementations
                 }).ToList(),
                 Reverved = order.Reserved,
                 UserId = order.UserId,
-                Username = order.User.Username
+                Username = order.User?.Username,
+                Status = order.Status
             };
         }
     }

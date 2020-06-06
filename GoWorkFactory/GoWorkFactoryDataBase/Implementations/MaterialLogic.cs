@@ -11,7 +11,7 @@ namespace GoWorkFactoryDataBase.Implementations
     public class MaterialLogic : IMaterialLogic
     {
 
-        public MaterialViewModel CreateOrUpdate(MaterialBindingModel model)
+        public int CreateOrUpdate(MaterialBindingModel model)
         {
             using (var context = new GoWorkFactoryDataBaseContext())
             {
@@ -41,7 +41,7 @@ namespace GoWorkFactoryDataBase.Implementations
                 }
 
                 context.SaveChanges();
-                return GetViewModel(element);
+                return element.Id;
             }
         }
 

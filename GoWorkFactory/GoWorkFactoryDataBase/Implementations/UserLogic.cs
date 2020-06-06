@@ -11,7 +11,7 @@ namespace GoWorkFactoryDataBase.Implementations
 {
     public class UserLogic : IUserLogic
     {
-        public UserViewModel CreateOrUpdate(UserBindingModel model)
+        public int CreateOrUpdate(UserBindingModel model)
         {
             using (var context = new GoWorkFactoryDataBaseContext())
             {
@@ -37,7 +37,7 @@ namespace GoWorkFactoryDataBase.Implementations
                 user.EmailConfirmed = model.EmailConfirmed;
                 user.Role = model.Role;
                 context.SaveChanges();
-                return GetViewModel(user);
+                return user.Id;
             }
         }
 

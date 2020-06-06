@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.buttonInExcel = new System.Windows.Forms.Button();
+            this.buttonSend = new System.Windows.Forms.Button();
             this.buttonGenerateData = new System.Windows.Forms.Button();
             this.dateTimePickerTo = new System.Windows.Forms.DateTimePicker();
             this.dateTimePickerFrom = new System.Windows.Forms.DateTimePicker();
             this.labelEmail = new System.Windows.Forms.Label();
-            this.textBox = new System.Windows.Forms.TextBox();
+            this.textBoxEmail = new System.Windows.Forms.TextBox();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.tourColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.componentColumnType = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -43,15 +43,15 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
-            // buttonInExcel
+            // buttonSend
             // 
-            this.buttonInExcel.Location = new System.Drawing.Point(696, 441);
-            this.buttonInExcel.Name = "buttonInExcel";
-            this.buttonInExcel.Size = new System.Drawing.Size(92, 31);
-            this.buttonInExcel.TabIndex = 7;
-            this.buttonInExcel.Text = "Отправить";
-            this.buttonInExcel.UseVisualStyleBackColor = true;
-            this.buttonInExcel.Click += new System.EventHandler(this.buttonInExcel_Click);
+            this.buttonSend.Location = new System.Drawing.Point(696, 441);
+            this.buttonSend.Name = "buttonSend";
+            this.buttonSend.Size = new System.Drawing.Size(92, 31);
+            this.buttonSend.TabIndex = 7;
+            this.buttonSend.Text = "Отправить";
+            this.buttonSend.UseVisualStyleBackColor = true;
+            this.buttonSend.Click += new System.EventHandler(this.buttonInExcel_Click);
             // 
             // buttonGenerateData
             // 
@@ -86,12 +86,12 @@
             this.labelEmail.TabIndex = 8;
             this.labelEmail.Text = "Почта:";
             // 
-            // textBox
+            // textBoxEmail
             // 
-            this.textBox.Location = new System.Drawing.Point(491, 445);
-            this.textBox.Name = "textBox";
-            this.textBox.Size = new System.Drawing.Size(189, 22);
-            this.textBox.TabIndex = 9;
+            this.textBoxEmail.Location = new System.Drawing.Point(491, 445);
+            this.textBoxEmail.Name = "textBoxEmail";
+            this.textBoxEmail.Size = new System.Drawing.Size(189, 22);
+            this.textBoxEmail.TabIndex = 9;
             // 
             // dataGridView
             // 
@@ -150,9 +150,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 484);
             this.Controls.Add(this.dataGridView);
-            this.Controls.Add(this.textBox);
+            this.Controls.Add(this.textBoxEmail);
             this.Controls.Add(this.labelEmail);
-            this.Controls.Add(this.buttonInExcel);
+            this.Controls.Add(this.buttonSend);
             this.Controls.Add(this.buttonGenerateData);
             this.Controls.Add(this.dateTimePickerTo);
             this.Controls.Add(this.dateTimePickerFrom);
@@ -166,12 +166,12 @@
 
         #endregion
 
-        private System.Windows.Forms.Button buttonInExcel;
+        private System.Windows.Forms.Button buttonSend;
         private System.Windows.Forms.Button buttonGenerateData;
         private System.Windows.Forms.DateTimePicker dateTimePickerTo;
         private System.Windows.Forms.DateTimePicker dateTimePickerFrom;
         private System.Windows.Forms.Label labelEmail;
-        private System.Windows.Forms.TextBox textBox;
+        private System.Windows.Forms.TextBox textBoxEmail;
         private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.DataGridViewTextBoxColumn tourColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn componentColumnType;

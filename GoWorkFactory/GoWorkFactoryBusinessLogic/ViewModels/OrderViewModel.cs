@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GoWorkFactoryBusinessLogic.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
@@ -16,6 +17,8 @@ namespace GoWorkFactoryBusinessLogic.ViewModels
         public string DeliveryAddress { get; set; }
         [DisplayName("Зарезервинован")]
         public bool Reverved { get; set; }
+        [DisplayName("Статус заказа")]
+        public OrderStatus Status { get; set; }
 
         public List<ProductViewModel> Products { get; set; }
     }

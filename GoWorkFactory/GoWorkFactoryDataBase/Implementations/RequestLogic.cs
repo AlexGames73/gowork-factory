@@ -12,7 +12,7 @@ namespace GoWorkFactoryDataBase.Implementations
 {
     public class RequestLogic : IRequestLogic
     {
-        public RequestViewModel CreateOrUpdate(RequestBindingModel model)
+        public int CreateOrUpdate(RequestBindingModel model)
         {
             using (var context = new GoWorkFactoryDataBaseContext())
             {
@@ -48,7 +48,7 @@ namespace GoWorkFactoryDataBase.Implementations
                     }
                 }
                 context.SaveChanges();
-                return GetViewModel(element);
+                return element.Id;
             }
         }
 

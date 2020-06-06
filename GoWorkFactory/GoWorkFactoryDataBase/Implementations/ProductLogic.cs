@@ -12,7 +12,7 @@ namespace GoWorkFactoryDataBase.Implementations
 {
     public class ProductLogic : IProductLogic
     {
-        public ProductViewModel CreateOrUpdate(ProductBindingModel model)
+        public int CreateOrUpdate(ProductBindingModel model)
         {
             using (var context = new GoWorkFactoryDataBaseContext())
             {
@@ -74,7 +74,7 @@ namespace GoWorkFactoryDataBase.Implementations
                             context.SaveChanges();
                         }
                         transaction.Commit();
-                        return GetViewModel(element);
+                        return element.Id;
                     }
                     catch (Exception)
                     {
