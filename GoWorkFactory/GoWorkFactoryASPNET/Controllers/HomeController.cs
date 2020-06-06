@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using DocumentFormat.OpenXml.Office.CustomUI;
 using GoWorkFactoryBusinessLogic.BindingModels;
 using GoWorkFactoryBusinessLogic.BusinessLogics;
+using GoWorkFactoryBusinessLogic.Enums;
 using GoWorkFactoryBusinessLogic.HelperModels;
 using GoWorkFactoryBusinessLogic.Interfaces;
 using GoWorkFactoryBusinessLogic.ViewModels;
@@ -11,6 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
+using SautinSoft;
 
 namespace GoWorkFactoryASPNET.Controllers
 {
@@ -50,7 +54,9 @@ namespace GoWorkFactoryASPNET.Controllers
             {
                 UserId = userId,
                 DeliveryDate = DateTime.Now,
-                DeliveryAddress = "Address"
+                DeliveryAddress = "Address",
+                Status = OrderStatus.Создан,
+                Reserved = false
             });
             return View();
         }
@@ -62,7 +68,9 @@ namespace GoWorkFactoryASPNET.Controllers
                 Id = order.Id,
                 UserId = order.UserId,
                 DeliveryDate = order.DeliveryDate,
-                DeliveryAddress = order.DeliveryAddress
+                DeliveryAddress = order.DeliveryAddress,
+                Status = OrderStatus.Создан,
+                Reserved = false
             });
             return Redirect("Index");
         }
@@ -143,6 +151,48 @@ namespace GoWorkFactoryASPNET.Controllers
                         ContentType = MimeTypes.Word,
                         FileData = reportLogic.SaveOrdersProductsToWordFile(userId),
                         Name = "ОтчетПоЗаказам"
+                    }
+                }
+            });
+            return Ok();
+        }
+
+        public IActionResult OrderReport()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Obsolete]
+        public IActionResult OrderReportModel(OrderReportViewModel model)
+        {
+            int userId = int.Parse(User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+            string email = User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.Email).Value;
+            Stream pdfFile = reportLogic.SaveProductsToPdfFile(new ReportProductsBindingModel
+            {
+                From = model.From,
+                To = model.To,
+                UserId = userId
+            });
+            if (!model.IsEmail)
+            {
+                byte[] data = new byte[pdfFile.Length];
+                pdfFile.Read(data);
+                string base64 = Convert.ToBase64String(data);
+                return Content($"<object data=\"data:application/pdf;base64,{base64}\" type=\"application/pdf\" width=\"100%\" height=\"1200px\" />", "text/html");
+            }
+            MailLogic.MailSendAsync(new MailSendInfo
+            {
+                MailAddress = email,
+                Subject = "Отчет по товарам",
+                Text = "Доброго времени суток, Ваш заказанный отчет прикреплен к этому сообщению",
+                Attachments = new List<MailAttachment>
+                {
+                    new MailAttachment
+                    {
+                        ContentType = MimeTypes.Pdf,
+                        FileData = pdfFile,
+                        Name = "ОтчетПоТоварам"
                     }
                 }
             });

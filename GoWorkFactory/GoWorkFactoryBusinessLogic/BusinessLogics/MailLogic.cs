@@ -50,6 +50,7 @@ namespace GoWorkFactoryBusinessLogic.BusinessLogics
                         objMailMessage.Body = info.Text;
                         objMailMessage.SubjectEncoding = Encoding.UTF8;
                         objMailMessage.BodyEncoding = Encoding.UTF8;
+                        objMailMessage.IsBodyHtml = info.IsBodyHtml;
                         info.Attachments?.ForEach(x =>
                         {
                             ContentType ct = new ContentType(x.ContentType);

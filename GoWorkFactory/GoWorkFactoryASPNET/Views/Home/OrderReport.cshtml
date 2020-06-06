@@ -1,0 +1,64 @@
+﻿@model OrderReportViewModel
+@{
+    ViewData["Title"] = "OrderReport";
+}
+
+<div class="text-center" style="margin: 10px">
+    <p class="display-1">Заказ отчета</p>
+</div>
+<br />
+<form>
+    <div class="d-flex justify-content-center">
+        <div class="form-group" style="margin: 1rem">
+            <label asp-for="From">Начальная дата</label><br />
+            <input type="date" asp-for="From" id="from" />
+            <span asp-validation-for="From" />
+        </div>
+        <div class="form-group" style="margin: 1rem">
+            <label asp-for="From">Конечная дата</label><br />
+            <input type="date" asp-for="To" id="to" />
+            <span asp-validation-for="To" />
+        </div>
+    </div>
+</form>
+<br />
+<div class="d-flex justify-content-center">
+    <button class="site-btn btn btn-success" style="margin: 1rem">Предварительный просмотр</button>
+    <button class="email-btn btn btn-danger" style="margin: 1rem">На почту</button>
+</div>
+<br />
+<div class="report" style="min-width: 1000px"></div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            $(".site-btn").click(function () {
+                var from = $("#from").val();
+                var to = $("#to").val();
+                $.post("/Home/OrderReportModel", {
+                    "model": {
+                        "From": from,
+                        "To": to,
+                        "IsEmail": false
+                    }
+                }).done(function (html) {
+                    $(".report").html(html);
+                });
+            })
+
+            $(".email-btn").click(function () {
+                var from = $("#from").val();
+                var to = $("#to").val();
+                $.post("/Home/OrderReportModel", {
+                    "model": {
+                        "From": from,
+                        "To": to,
+                        "IsEmail": true
+                    }
+                }).done(function () {
+                    location.href = "/";
+                });
+            })
+        });
+    </script>
+}

@@ -5,6 +5,7 @@
 
 <div class="text-center" style="margin: 10px">
     <a class="btn btn-primary" asp-action="CreateOrder" asp-controller="Home">Создать заказ</a>
+    <a class="btn btn-primary" asp-action="OrderReport" asp-controller="Home">Заказать отчет</a>
 </div>
 
 <table class="table table-striped">
@@ -20,6 +21,7 @@
             <th scope="col">Адрес доставки</th>
             <th scope="col">Сумма заказа</th>
             <th scope="col">Резервирование</th>
+            <th scope="col">Статус заказа</th>
             <th scope="col"></th>
             <th scope="col"></th>
         </tr>
@@ -38,6 +40,7 @@
             <td>@Model[i].DeliveryAddress</td>
             <td>@Model[i].Products.Sum(x => x.Count * x.Price)</td>
             <td>@Model[i].Reverved</td>
+            <td>@Model[i].Status.ToString()</td>
             <td scope="row"><a class="btn btn-danger" asp-action="DeleteOrder" asp-controller="Home" asp-route-orderId="@Model[i].Id">&times;</a></td>
             <td scope="row"><a class="btn @if (Model[i].Reverved) {<text>btn-outline-light disabled</text>} else {<text>btn-outline-warning</text>} " asp-action="EditOrder" asp-controller="Home" asp-route-orderId="@Model[i].Id">&hellip;</a></td>
         </tr>

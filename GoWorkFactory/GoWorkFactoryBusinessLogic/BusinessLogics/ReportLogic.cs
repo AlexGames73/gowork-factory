@@ -32,6 +32,21 @@ namespace GoWorkFactoryBusinessLogic.BusinessLogics
                 .ToList();
         }
 
+        public List<ReportProductsViewModel> GetProducts(ReportProductsBindingModel model)
+        {
+            return orderLogic.Read(new OrderBindingModel { UserId = model.UserId, From = model.From, To = model.To })
+                .SelectMany(x => x.Products.Select(y => new ReportProductsViewModel
+                {
+                    OrderId = x.Id,
+                    Status = x.Status,
+                    Count = y.Count,
+                    DeliveryDate = x.DeliveryDate,
+                    ProductName = y.Name,
+                    TotalPrice = y.Price * y.Count
+                }))
+                .ToList();
+        }
+
         public Stream SaveOrdersProductsToWordFile(int userId)
         {
             return SaveToWord.CreateDocOrdersProducts(new OrdersProductsWordInfo
@@ -64,6 +79,18 @@ namespace GoWorkFactoryBusinessLogic.BusinessLogics
             {
                 Title = "Заявка на материалы",
                 Materials = materials
+            });
+        }
+
+        [Obsolete]
+        public Stream SaveProductsToPdfFile(ReportProductsBindingModel model)
+        {
+            return SaveToPdf.CreateDocProducts(new ProductsPdfInfo
+            {
+                From = model.From,
+                To = model.To,
+                Products = GetProducts(model),
+                Title = "Отчет по товарам"
             });
         }
     }

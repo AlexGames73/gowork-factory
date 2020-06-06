@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GoWorkFactoryBusinessLogic.Enums;
+using System;
 
 namespace GoWorkFactoryBusinessLogic.BindingModels
 {
@@ -9,5 +10,9 @@ namespace GoWorkFactoryBusinessLogic.BindingModels
         public DateTime DeliveryDate { get; set; }
         public string DeliveryAddress { get; set; }
         public bool Reserved { get; set; }
+        public OrderStatus Status { get; set; }
+
+        public DateTime? From { get; set; }
+        public DateTime? To { get; set; }
     }
 }

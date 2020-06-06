@@ -1,4 +1,5 @@
 ﻿using GoWorkFactoryBusinessLogic.BindingModels;
+using GoWorkFactoryBusinessLogic.Enums;
 using GoWorkFactoryBusinessLogic.Interfaces;
 using GoWorkFactoryBusinessLogic.ViewModels;
 using GoWorkFactoryDataBase.Models;
@@ -51,6 +52,7 @@ namespace GoWorkFactoryDataBase.Implementations
                 order.DeliveryDate = model.DeliveryDate;
                 order.DeliveryAddress = model.DeliveryAddress;
                 order.Reserved = model.Reserved;
+                order.Status = model.Status;
                 context.SaveChanges();
 
                 return GetViewModel(order);
@@ -65,7 +67,12 @@ namespace GoWorkFactoryDataBase.Implementations
                     .Include(x => x.ProductOrders)
                         .ThenInclude(x => x.Product)
                     .Include(x => x.User)
-                    .Where(x => model == null || x.Id == model.Id || x.UserId == model.UserId)
+                    .Where(x => 
+                        (model == null) || 
+                        (x.Id == model.Id) || 
+                        (x.UserId == model.UserId) || 
+                        (model.From.HasValue && model.To.HasValue && x.DeliveryDate.Date >= model.From.Value.Date && x.DeliveryDate.Date <= model.To.Value.Date)
+                    )
                     .Select(GetViewModel)
                     .ToList();
             }
@@ -112,6 +119,7 @@ namespace GoWorkFactoryDataBase.Implementations
                 }
 
                 order.Reserved = model.Reserved;
+                order.Status = OrderStatus.Зарезервирован;
                 context.SaveChanges();
             }
         }
@@ -132,7 +140,8 @@ namespace GoWorkFactoryDataBase.Implementations
                 }).ToList(),
                 Reverved = order.Reserved,
                 UserId = order.UserId,
-                Username = order.User.Username
+                Username = order.User.Username,
+                Status = order.Status
             };
         }
     }
