@@ -1,9 +1,11 @@
-﻿using System;
+﻿using GoWorkFactoryBusinessLogic.Attributes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GoWorkFactoryDataBase.Models
 {
+    [AdminBackup]
     public class Request
     {
         public int Id { get; set; }

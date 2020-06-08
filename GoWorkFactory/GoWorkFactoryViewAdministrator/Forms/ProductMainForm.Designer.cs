@@ -36,6 +36,9 @@
             this.материалыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.оформитьЗаявкуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.отчетПоЗаявкамИЗаказамToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.бэкапToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.jsonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.xmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -86,7 +89,8 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.материалыToolStripMenuItem,
             this.оформитьЗаявкуToolStripMenuItem,
-            this.отчетПоЗаявкамИЗаказамToolStripMenuItem});
+            this.отчетПоЗаявкамИЗаказамToolStripMenuItem,
+            this.бэкапToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(800, 28);
@@ -113,6 +117,29 @@
             this.отчетПоЗаявкамИЗаказамToolStripMenuItem.Size = new System.Drawing.Size(218, 24);
             this.отчетПоЗаявкамИЗаказамToolStripMenuItem.Text = "Отчет по заявкам и заказам";
             this.отчетПоЗаявкамИЗаказамToolStripMenuItem.Click += new System.EventHandler(this.отчетПоЗаявкамИЗаказамToolStripMenuItem_Click);
+            // 
+            // бэкапToolStripMenuItem
+            // 
+            this.бэкапToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.jsonToolStripMenuItem,
+            this.xmlToolStripMenuItem});
+            this.бэкапToolStripMenuItem.Name = "бэкапToolStripMenuItem";
+            this.бэкапToolStripMenuItem.Size = new System.Drawing.Size(63, 24);
+            this.бэкапToolStripMenuItem.Text = "Бэкап";
+            // 
+            // jsonToolStripMenuItem
+            // 
+            this.jsonToolStripMenuItem.Name = "jsonToolStripMenuItem";
+            this.jsonToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.jsonToolStripMenuItem.Text = "Json";
+            this.jsonToolStripMenuItem.Click += new System.EventHandler(this.jsonToolStripMenuItem_Click);
+            // 
+            // xmlToolStripMenuItem
+            // 
+            this.xmlToolStripMenuItem.Name = "xmlToolStripMenuItem";
+            this.xmlToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.xmlToolStripMenuItem.Text = "Xml";
+            this.xmlToolStripMenuItem.Click += new System.EventHandler(this.xmlToolStripMenuItem_Click);
             // 
             // ProductMainForm
             // 
@@ -146,5 +173,8 @@
         private System.Windows.Forms.ToolStripMenuItem материалыToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem оформитьЗаявкуToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem отчетПоЗаявкамИЗаказамToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem бэкапToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem jsonToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem xmlToolStripMenuItem;
     }
 }

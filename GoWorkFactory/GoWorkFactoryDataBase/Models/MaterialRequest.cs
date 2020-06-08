@@ -1,5 +1,8 @@
-﻿namespace GoWorkFactoryDataBase.Models
+﻿using GoWorkFactoryBusinessLogic.Attributes;
+
+namespace GoWorkFactoryDataBase.Models
 {
+    [AdminBackup]
     public class MaterialRequest
     {
         public int Id { get; set; }

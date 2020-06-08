@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using GoWorkFactoryBusinessLogic.Attributes;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GoWorkFactoryDataBase.Models
 {
+    [AdminBackup]
     public class Material
     {
         public int Id { get; set; }

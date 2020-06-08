@@ -1,4 +1,5 @@
 ﻿using GoWorkFactoryBusinessLogic.BindingModels;
+using GoWorkFactoryBusinessLogic.BusinessLogics;
 using GoWorkFactoryBusinessLogic.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -109,6 +111,32 @@ namespace GoWorkFactoryViewAdministrator.Forms
         {
             var form = Container.Resolve<ReportForm>();
             form.ShowDialog();
+        }
+
+        private void jsonToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var fbd = new FolderBrowserDialog();
+            if (fbd.ShowDialog() == DialogResult.OK)
+            {
+                 AdminBackUpLogic.CreateBackupToJSON(
+                     Assembly.GetAssembly(typeof(GoWorkFactoryDataBase.GoWorkFactoryDataBaseContext)), fbd.SelectedPath);
+
+                MessageBox.Show("JSON бекап создан", "Сообщение",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void xmlToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var fbd = new FolderBrowserDialog();
+            if (fbd.ShowDialog() == DialogResult.OK)
+            {
+                AdminBackUpLogic.CreateBackupToXML(
+                    Assembly.GetAssembly(typeof(GoWorkFactoryDataBase.GoWorkFactoryDataBaseContext)), fbd.SelectedPath);
+
+                MessageBox.Show("XML бекап создан", "Сообщение",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
     }
 }
