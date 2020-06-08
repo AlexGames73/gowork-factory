@@ -3,6 +3,11 @@
     ViewData["Title"] = "Index";
 }
 
+<div class="d-flex justify-content-between" style="margin: 10px">
+    <a class="btn btn-primary" asp-action="BackupJson" asp-controller="Home">Забэкапить базу в JSON</a>
+    <a class="btn btn-primary" asp-action="BackupXml" asp-controller="Home">Забэкапить базу в XML</a>
+</div>
+
 <div class="text-center" style="margin: 10px">
     <a class="btn btn-primary" asp-action="CreateOrder" asp-controller="Home">Создать заказ</a>
     <a class="btn btn-primary" asp-action="OrderReport" asp-controller="Home">Заказать отчет</a>
@@ -29,21 +34,21 @@
     <tbody>
         @for (int i = 0; i < Model.Count; i++)
         {
-        <tr>
-            <td>
-                <div class="form-check">
-                    <input class="select-item form-check-input position-static" type="checkbox" id="@("checkbox" + i)">
-                </div>
-            </td>
-            <td>@Model[i].Id.ToString("000000")</td>
-            <td>@Model[i].DeliveryDate</td>
-            <td>@Model[i].DeliveryAddress</td>
-            <td>@Model[i].Products.Sum(x => x.Count * x.Price)</td>
-            <td>@Model[i].Reverved</td>
-            <td>@Model[i].Status.ToString()</td>
-            <td scope="row"><a class="btn btn-danger" asp-action="DeleteOrder" asp-controller="Home" asp-route-orderId="@Model[i].Id">&times;</a></td>
-            <td scope="row"><a class="btn @if (Model[i].Reverved) {<text>btn-outline-light disabled</text>} else {<text>btn-outline-warning</text>} " asp-action="EditOrder" asp-controller="Home" asp-route-orderId="@Model[i].Id">&hellip;</a></td>
-        </tr>
+            <tr>
+                <td>
+                    <div class="form-check">
+                        <input class="select-item form-check-input position-static" type="checkbox" id="@("checkbox" + i)">
+                    </div>
+                </td>
+                <td>@Model[i].Id.ToString("000000")</td>
+                <td>@Model[i].DeliveryDate</td>
+                <td>@Model[i].DeliveryAddress</td>
+                <td>@Model[i].Products.Sum(x => x.Count * x.Price)</td>
+                <td>@Model[i].Reverved</td>
+                <td>@Model[i].Status.ToString()</td>
+                <td scope="row"><a class="btn btn-danger" asp-action="DeleteOrder" asp-controller="Home" asp-route-orderId="@Model[i].Id">&times;</a></td>
+                <td scope="row"><a class="btn @if (Model[i].Reverved) {<text>btn-outline-light disabled</text>} else {<text>btn-outline-warning</text>} " asp-action="EditOrder" asp-controller="Home" asp-route-orderId="@Model[i].Id">&hellip;</a></td>
+            </tr>
         }
     </tbody>
 </table>

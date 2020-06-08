@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using GoWorkFactoryBusinessLogic.BindingModels;
 using GoWorkFactoryBusinessLogic.BusinessLogics;
 using GoWorkFactoryBusinessLogic.Enums;
 using GoWorkFactoryBusinessLogic.HelperModels;
 using GoWorkFactoryBusinessLogic.Interfaces;
 using GoWorkFactoryBusinessLogic.ViewModels;
+using GoWorkFactoryDataBase;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -195,6 +197,20 @@ namespace GoWorkFactoryASPNET.Controllers
                 }
             });
             return Ok();
+        }
+
+        [HttpGet]
+        public IActionResult BackupJson()
+        {
+            ClientBackupLogic.BackupJson(Assembly.GetAssembly(typeof(GoWorkFactoryDataBaseContext)), "backups");
+            return Redirect("Index");
+        }
+
+        [HttpGet]
+        public IActionResult BackupXml()
+        {
+            ClientBackupLogic.BackupXml(Assembly.GetAssembly(typeof(GoWorkFactoryDataBaseContext)), "backups");
+            return Redirect("Index");
         }
     }
 }
