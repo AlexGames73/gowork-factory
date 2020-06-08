@@ -1,5 +1,4 @@
 ﻿using GoWorkFactoryBusinessLogic.Enums;
-using System;
 
 namespace GoWorkFactoryBusinessLogic.ViewModels
 {

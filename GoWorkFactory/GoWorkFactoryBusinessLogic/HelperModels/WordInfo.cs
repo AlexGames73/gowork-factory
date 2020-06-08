@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace GoWorkFactoryBusinessLogic.HelperModels
+﻿namespace GoWorkFactoryBusinessLogic.HelperModels
 {
     public class WordInfo
     {

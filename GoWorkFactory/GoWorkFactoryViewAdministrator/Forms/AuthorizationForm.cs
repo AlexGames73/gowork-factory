@@ -1,5 +1,4 @@
 ﻿using GoWorkFactoryBusinessLogic.Interfaces;
-using GoWorkFactoryDataBase.Models;
 using System;
 using System.Linq;
 using System.Windows.Forms;

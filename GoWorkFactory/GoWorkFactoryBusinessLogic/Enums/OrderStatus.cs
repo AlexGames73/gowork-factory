@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GoWorkFactoryBusinessLogic.Enums
+﻿namespace GoWorkFactoryBusinessLogic.Enums
 {
     public enum OrderStatus
     {
