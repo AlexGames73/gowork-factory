@@ -1,6 +1,5 @@
 ﻿using GoWorkFactoryBusinessLogic.HelperModels;
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;

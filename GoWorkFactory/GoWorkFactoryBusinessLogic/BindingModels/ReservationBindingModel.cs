@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GoWorkFactoryBusinessLogic.BindingModels
+﻿namespace GoWorkFactoryBusinessLogic.BindingModels
 {
     public class ReservationBindingModel
     {

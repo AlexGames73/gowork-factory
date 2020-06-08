@@ -1,6 +1,5 @@
 ﻿using GoWorkFactoryDataBase.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace GoWorkFactoryDataBase
 {

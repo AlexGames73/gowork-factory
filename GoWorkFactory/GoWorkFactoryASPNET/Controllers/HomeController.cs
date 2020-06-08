@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using DocumentFormat.OpenXml.Office.CustomUI;
 using GoWorkFactoryBusinessLogic.BindingModels;
 using GoWorkFactoryBusinessLogic.BusinessLogics;
 using GoWorkFactoryBusinessLogic.Enums;
@@ -12,9 +10,6 @@ using GoWorkFactoryBusinessLogic.Interfaces;
 using GoWorkFactoryBusinessLogic.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Options;
-using SautinSoft;
 
 namespace GoWorkFactoryASPNET.Controllers
 {
