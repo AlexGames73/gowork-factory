@@ -108,15 +108,44 @@ namespace GoWorkFactoryDataBase.Implementations
         {
             using (var context = new GoWorkFactoryDataBaseContext())
             {
-                var order = context.Orders.FirstOrDefault(x => x.Id == model.OrderId);
-                if (order == null)
+                using (var transaction = context.Database.BeginTransaction())
                 {
-                    throw new Exception("Такого заказа не существует");
-                }
+                    try
+                    {
+                        var order = context.Orders
+                            .Include(x => x.ProductOrders)
+                                .ThenInclude(x => x.Product)
+                                    .ThenInclude(x => x.MaterialProducts)
+                                        .ThenInclude(x => x.Material)
+                            .FirstOrDefault(x => x.Id == model.OrderId);
+                        if (order == null)
+                        {
+                            throw new Exception("Такого заказа не существует");
+                        }
 
-                order.Reserved = model.Reserved;
-                order.Status = OrderStatus.Зарезервирован;
-                context.SaveChanges();
+                        order.Reserved = model.Reserved;
+                        order.Status = OrderStatus.Зарезервирован;
+
+                        foreach (var product in order.ProductOrders)
+                        {
+                            foreach (var materialProduct in product.Product.MaterialProducts)
+                            {
+                                materialProduct.Material.Count -= materialProduct.MaterialAmount;
+
+                                if (materialProduct.Material.Count < 0)
+                                    throw new Exception("Недостаточно материалов на складах");
+                            }
+                        }
+
+                        context.SaveChanges();
+                        transaction.Commit();
+                    }
+                    catch
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
             }
         }
 
