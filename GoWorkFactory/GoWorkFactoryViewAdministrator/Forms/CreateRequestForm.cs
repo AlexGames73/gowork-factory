@@ -72,6 +72,7 @@ namespace GoWorkFactoryViewAdministrator.Forms
                 int id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
                 form.Id = id;
                 form.Count = materials[id].Item2;
+                form.Price = materials[id].Item3;
                 if (form.ShowDialog() == DialogResult.OK)
                 {
                     materials[form.Id] = (form.ComponentName, form.Count, form.Price);
@@ -108,7 +109,9 @@ namespace GoWorkFactoryViewAdministrator.Forms
             {
                 if (!Regex.IsMatch(textBoxEmail.Text, @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"))
                 {
-                    throw new Exception("Не правильный формат почты");
+                    MessageBox.Show("Не правильный формат почты", "Ошибка", MessageBoxButtons.OK,
+                   MessageBoxIcon.Error);
+                    return;
                 }
 
                 MessageBox.Show("Заполните название", "Ошибка", MessageBoxButtons.OK,

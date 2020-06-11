@@ -45,6 +45,12 @@ namespace GoWorkFactoryViewAdministrator.Forms
                MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            if (!int.TryParse(textBoxCount.Text, out int resault))
+            {
+                MessageBox.Show("В поле Количество не число", "Ошибка",
+               MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             if (comboBoxMaterials.SelectedValue == null)
             {
                 MessageBox.Show("Выберите компонент", "Ошибка", MessageBoxButtons.OK,

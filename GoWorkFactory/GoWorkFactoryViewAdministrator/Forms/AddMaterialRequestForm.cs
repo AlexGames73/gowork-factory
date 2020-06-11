@@ -47,18 +47,36 @@ namespace GoWorkFactoryViewAdministrator.Forms
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(textBoxCount.Text))
             {
-                MessageBox.Show("Заполните поле Количество", "Ошибка",
-               MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                if (string.IsNullOrEmpty(textBoxCount.Text))
+                {
+                    MessageBox.Show("Заполните поле Количество", "Ошибка",
+                   MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                if (!int.TryParse(textBoxCount.Text, out int resault))
+                {
+                    MessageBox.Show("В поле количество не число", "Ошибка",
+                   MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
             }
-            if (string.IsNullOrEmpty(textBoxPrice.Text))
+
             {
-                MessageBox.Show("Заполните поле Количество", "Ошибка",
-               MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                if (string.IsNullOrEmpty(textBoxPrice.Text))
+                {
+                    MessageBox.Show("Заполните поле Количество", "Ошибка",
+                   MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                if (!int.TryParse(textBoxPrice.Text, out int resault))
+                {
+                    MessageBox.Show("В поле цена не число", "Ошибка",
+                   MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
             }
+
             if (comboBoxMaterials.SelectedValue == null)
             {
                 MessageBox.Show("Выберите компонент", "Ошибка", MessageBoxButtons.OK,
