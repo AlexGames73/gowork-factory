@@ -1,8 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using GoWorkFactoryBusinessLogic.Enums;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -19,7 +21,75 @@ namespace GoWorkFactoryBusinessLogic.BusinessLogics
             "GoWorkFactoryDataBase.Models.User"
         };
 
-        public static void BackupJson(Assembly assembly, string path)
+        private static Stream CreateArchive(Assembly assembly, int userId, FileType fileType)
+        {
+            try
+            {
+                DirectoryInfo dirInfo = new DirectoryInfo("backup" + userId);
+                if (dirInfo.Exists)
+                {
+                    foreach (FileInfo file in dirInfo.GetFiles())
+                    {
+                        file.Delete();
+                    }
+                }
+                else
+                {
+                    dirInfo.Create();
+                }
+                string fileName = $"backup{userId}.zip";
+                if (File.Exists(fileName))
+                {
+                    File.Delete(fileName);
+                }
+
+                IEnumerable<(string fileName, Stream stream)> files = new List<(string fileName, Stream stream)>();
+                if (fileType == FileType.Json)
+                {
+                    files = BackupJson(assembly);
+                }
+                else if (fileType == FileType.Xml)
+                {
+                    files = BackupXml(assembly);
+                }
+
+                int i = 0;
+                foreach (var file in files)
+                {
+                    using (FileStream fileStream = File.OpenWrite("backup" + userId + "/" + file.fileName))
+                    {
+                        byte[] data = new byte[file.stream.Length];
+                        file.stream.Read(data, 0, data.Length);
+                        fileStream.Write(data, 0, data.Length);
+                    }
+                    i++;
+                }
+
+                // архивируем
+                ZipFile.CreateFromDirectory("backup" + userId, fileName);
+                // удаляем папку
+                dirInfo.Delete(true);
+
+                return File.OpenRead(fileName);
+            }
+            catch (Exception)
+            {
+                // делаем проброс
+                throw;
+            }
+        }
+
+        public static Stream CreateArchiveJson(Assembly assembly, int userId)
+        {
+            return CreateArchive(assembly, userId, FileType.Json);
+        }
+
+        public static Stream CreateArchiveXml(Assembly assembly, int userId)
+        {
+            return CreateArchive(assembly, userId, FileType.Xml);
+        }
+
+        private static IEnumerable<(string fileName, Stream stream)> BackupJson(Assembly assembly)
         {
             Type contextType = assembly.GetType("GoWorkFactoryDataBase.GoWorkFactoryDataBaseContext");
             object context = Activator.CreateInstance(contextType);
@@ -27,11 +97,6 @@ namespace GoWorkFactoryBusinessLogic.BusinessLogics
             foreach (var typeName in typeNames)
             {
                 Type type = assembly.GetType(typeName);
-
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
 
                 string body = "[\n";
                 IEnumerable set = (IEnumerable)contextType.GetMethod("Set").MakeGenericMethod(type).Invoke(context, null);
@@ -57,13 +122,15 @@ namespace GoWorkFactoryBusinessLogic.BusinessLogics
                 body += string.Join(",\n", objs);
                 body += "\n]";
 
-                File.WriteAllText(path + "/" + type.Name + ".json", body);
+                MemoryStream memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(body));
+                memoryStream.Position = 0;
+                yield return (type.Name + ".json", memoryStream);
             }
 
             contextType.GetMethod("Dispose").Invoke(context, null);
         }
 
-        public static void BackupXml(Assembly assembly, string path)
+        private static IEnumerable<(string fileName, Stream stream)> BackupXml(Assembly assembly)
         {
             Type contextType = assembly.GetType("GoWorkFactoryDataBase.GoWorkFactoryDataBaseContext");
             object context = Activator.CreateInstance(contextType);
@@ -71,11 +138,6 @@ namespace GoWorkFactoryBusinessLogic.BusinessLogics
             foreach (var typeName in typeNames)
             {
                 Type type = assembly.GetType(typeName);
-
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
 
                 string body = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
                 body += $"<{type.Name}-list>\n";
@@ -95,7 +157,9 @@ namespace GoWorkFactoryBusinessLogic.BusinessLogics
                 }
                 body += $"</{type.Name}-list>";
 
-                File.WriteAllText(path + "/" + type.Name + ".xml", body);
+                MemoryStream memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(body));
+                memoryStream.Position = 0;
+                yield return (type.Name + ".xml", memoryStream);
             }
 
             contextType.GetMethod("Dispose").Invoke(context, null);

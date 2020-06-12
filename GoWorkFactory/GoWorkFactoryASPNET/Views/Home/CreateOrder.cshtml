@@ -23,7 +23,7 @@
         </div>
         <div class="form-group">
             <label asp-for="DeliveryDate">Введите дату доставки</label>
-            <input type="datetime" asp-for="DeliveryDate" value="@ViewBag.Order.DeliveryDate" />
+            <input type="date" asp-for="DeliveryDate" value="@ViewBag.Order.DeliveryDate.ToString("yyyy-MM-dd")" />
             <span asp-validation-for="DeliveryDate" />
         </div>
         <div class="form-group">

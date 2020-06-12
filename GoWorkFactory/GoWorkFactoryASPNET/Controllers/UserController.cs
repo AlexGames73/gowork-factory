@@ -40,27 +40,34 @@ namespace GoWorkFactoryASPNET.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = userLogic.Read(new UserBindingModel { 
-                    Username = model.Username, 
-                    Password = model.Password 
-                }).FirstOrDefault();
-
-                if (!user.EmailConfirmed)
+                var user = userLogic.Read(new UserBindingModel
                 {
-                    return View("~/Views/Shared/Error.cshtml", new ErrorViewModel { Title = "Ошибка", Message = "Вы не подтвердили почту" });
-                }
+                    Username = model.Username,
+                    Password = model.Password
+                }).FirstOrDefault();
 
                 if (user != null)
                 {
+                    if (!user.EmailConfirmed)
+                    {
+                        model.Error = "Вы не подтвердили почту";
+                        return View(model);
+                    }
+
                     await Authenticate(user.Username, user.Id, user.Email); // аутентификация
                     return RedirectToAction("Index", "Home");
                 }
                 else
                 {
-                    return View("~/Views/Shared/Error.cshtml", new ErrorViewModel { Title = "Ошибка", Message = "Неправильный логин или пароль" });
+                    model.Error = "Неправильный логин или пароль";
+                    return View(model);
                 }
             }
-            return View(model);
+            else
+            {
+                model.Error = ModelState.Values.SelectMany(x => x.Errors).FirstOrDefault().ErrorMessage;
+                return View(model);
+            }
         }
 
         [HttpGet]
@@ -103,10 +110,15 @@ namespace GoWorkFactoryASPNET.Controllers
                 }
                 catch (Exception e)
                 {
-                    return View("~/Views/Shared/Error.cshtml", new ErrorViewModel { Title = "Ошибка", Message = e.Message });
+                    model.Error = e.Message;
+                    return View(model);
                 }
             }
-            return View(model);
+            else
+            {
+                model.Error = ModelState.Values.SelectMany(x => x.Errors).FirstOrDefault()?.ErrorMessage;
+                return View(model);
+            }
         }
 
         [HttpGet]
@@ -133,7 +145,7 @@ namespace GoWorkFactoryASPNET.Controllers
                 EmailConfirmed = true
             });
 
-            return Redirect("Login");
+            return View("~/Views/Shared/Error.cshtml", new ErrorViewModel { Title = "Информация", Message = "Почта подтверждена" });
         }
 
         private async Task Authenticate(string userName, int userId, string email)

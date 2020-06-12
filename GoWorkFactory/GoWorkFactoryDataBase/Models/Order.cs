@@ -12,7 +12,6 @@ namespace GoWorkFactoryDataBase.Models
         public User User { get; set; }
         public DateTime DeliveryDate { get; set; }
         public string DeliveryAddress { get; set; }
-        public bool Reserved { get; set; }
         public OrderStatus Status { get; set; }
 
         [ForeignKey("OrderId")]
