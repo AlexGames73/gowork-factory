@@ -32,16 +32,16 @@
             this.buttonChange = new System.Windows.Forms.Button();
             this.buttonAdd = new System.Windows.Forms.Button();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Material = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Count = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Price = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.labelEmail = new System.Windows.Forms.Label();
             this.textBoxEmail = new System.Windows.Forms.TextBox();
             this.labelTypeFile = new System.Windows.Forms.Label();
             this.comboBoxTypeFile = new System.Windows.Forms.ComboBox();
             this.buttonSend = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Material = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Count = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Price = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -90,6 +90,35 @@
             this.dataGridView.Size = new System.Drawing.Size(504, 325);
             this.dataGridView.TabIndex = 8;
             // 
+            // Column1
+            // 
+            this.Column1.HeaderText = "Column1";
+            this.Column1.MinimumWidth = 6;
+            this.Column1.Name = "Column1";
+            this.Column1.Visible = false;
+            this.Column1.Width = 125;
+            // 
+            // Material
+            // 
+            this.Material.HeaderText = "Материал";
+            this.Material.MinimumWidth = 6;
+            this.Material.Name = "Material";
+            this.Material.Width = 150;
+            // 
+            // Count
+            // 
+            this.Count.HeaderText = "Количество";
+            this.Count.MinimumWidth = 6;
+            this.Count.Name = "Count";
+            this.Count.Width = 150;
+            // 
+            // Price
+            // 
+            this.Price.HeaderText = "Стоимость";
+            this.Price.MinimumWidth = 6;
+            this.Price.Name = "Price";
+            this.Price.Width = 125;
+            // 
             // labelEmail
             // 
             this.labelEmail.AutoSize = true;
@@ -120,7 +149,7 @@
             this.comboBoxTypeFile.FormattingEnabled = true;
             this.comboBoxTypeFile.Items.AddRange(new object[] {
             "Word",
-            "Xml"});
+            "Xls"});
             this.comboBoxTypeFile.Location = new System.Drawing.Point(168, 392);
             this.comboBoxTypeFile.Name = "comboBoxTypeFile";
             this.comboBoxTypeFile.Size = new System.Drawing.Size(348, 24);
@@ -145,35 +174,6 @@
             this.buttonCancel.Text = "Отмена";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
-            // 
-            // Column1
-            // 
-            this.Column1.HeaderText = "Column1";
-            this.Column1.MinimumWidth = 6;
-            this.Column1.Name = "Column1";
-            this.Column1.Visible = false;
-            this.Column1.Width = 125;
-            // 
-            // Material
-            // 
-            this.Material.HeaderText = "Материал";
-            this.Material.MinimumWidth = 6;
-            this.Material.Name = "Material";
-            this.Material.Width = 150;
-            // 
-            // Count
-            // 
-            this.Count.HeaderText = "Количество";
-            this.Count.MinimumWidth = 6;
-            this.Count.Name = "Count";
-            this.Count.Width = 150;
-            // 
-            // Price
-            // 
-            this.Price.HeaderText = "Стоимость";
-            this.Price.MinimumWidth = 6;
-            this.Price.Name = "Price";
-            this.Price.Width = 125;
             // 
             // CreateRequestForm
             // 

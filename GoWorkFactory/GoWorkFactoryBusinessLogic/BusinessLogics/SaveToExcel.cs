@@ -315,6 +315,7 @@ namespace GoWorkFactoryBusinessLogic.BusinessLogics
                 }
                 workbookpart.Workbook.Save();
             }
+            memoryStream.Position = 0;
             return memoryStream;
         }
         /// <summary>
