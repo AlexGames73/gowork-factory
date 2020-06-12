@@ -51,7 +51,6 @@ namespace GoWorkFactoryDataBase.Implementations
                 order.UserId = model.UserId.Value;
                 order.DeliveryDate = model.DeliveryDate;
                 order.DeliveryAddress = model.DeliveryAddress;
-                order.Reserved = model.Reserved;
                 order.Status = model.Status;
                 context.SaveChanges();
 
@@ -123,8 +122,7 @@ namespace GoWorkFactoryDataBase.Implementations
                             throw new Exception("Такого заказа не существует");
                         }
 
-                        order.Reserved = model.Reserved;
-                        order.Status = OrderStatus.Зарезервирован;
+                        order.Status = model.Reserved ? OrderStatus.Зарезервирован : OrderStatus.Создан;
 
                         foreach (var product in order.ProductOrders)
                         {
@@ -163,7 +161,6 @@ namespace GoWorkFactoryDataBase.Implementations
                     Price = y.Product.Price,
                     Count = y.ProductAmount
                 }).ToList(),
-                Reverved = order.Reserved,
                 UserId = order.UserId,
                 Username = order.User?.Username,
                 Status = order.Status

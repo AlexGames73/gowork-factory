@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Net.Mime;
 using System.Reflection;
 using GoWorkFactoryBusinessLogic.BindingModels;
 using GoWorkFactoryBusinessLogic.BusinessLogics;
@@ -54,8 +56,7 @@ namespace GoWorkFactoryASPNET.Controllers
                     UserId = userId,
                     DeliveryDate = DateTime.Now,
                     DeliveryAddress = "Address",
-                    Status = OrderStatus.Создан,
-                    Reserved = false
+                    Status = OrderStatus.Создан
                 })
             }).FirstOrDefault();
             return View();
@@ -69,8 +70,7 @@ namespace GoWorkFactoryASPNET.Controllers
                 UserId = order.UserId,
                 DeliveryDate = order.DeliveryDate,
                 DeliveryAddress = order.DeliveryAddress,
-                Status = OrderStatus.Создан,
-                Reserved = false
+                Status = OrderStatus.Создан
             });
             return Redirect("Index");
         }
@@ -110,11 +110,12 @@ namespace GoWorkFactoryASPNET.Controllers
                     Reserved = item.Reserved
                 });
             }
+            
             return Ok();
         }
 
         [HttpPost]
-        public IActionResult ExcelReport()
+        public IActionResult ExcelReport(List<int> ids)
         {
             int userId = int.Parse(User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value);
             MailLogic.MailSendAsync(new MailSendInfo
@@ -127,7 +128,7 @@ namespace GoWorkFactoryASPNET.Controllers
                     new MailAttachment
                     {
                         ContentType = MimeTypes.Excel,
-                        FileData = reportLogic.SaveOrdersProductsToExcelFile(userId),
+                        FileData = reportLogic.SaveOrdersProductsToExcelFile(userId, ids),
                         Name = "ОтчетПоЗаказам"
                     }
                 }
@@ -136,7 +137,7 @@ namespace GoWorkFactoryASPNET.Controllers
         }
 
         [HttpPost]
-        public IActionResult WordReport()
+        public IActionResult WordReport(List<int> ids)
         {
             int userId = int.Parse(User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value);
             MailLogic.MailSendAsync(new MailSendInfo
@@ -149,7 +150,7 @@ namespace GoWorkFactoryASPNET.Controllers
                     new MailAttachment
                     {
                         ContentType = MimeTypes.Word,
-                        FileData = reportLogic.SaveOrdersProductsToWordFile(userId),
+                        FileData = reportLogic.SaveOrdersProductsToWordFile(userId, ids),
                         Name = "ОтчетПоЗаказам"
                     }
                 }
@@ -202,15 +203,17 @@ namespace GoWorkFactoryASPNET.Controllers
         [HttpGet]
         public IActionResult BackupJson()
         {
-            ClientBackupLogic.BackupJson(Assembly.GetAssembly(typeof(GoWorkFactoryDataBaseContext)), "backups");
-            return Redirect("Index");
+            int userId = int.Parse(User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+            Stream archive = ClientBackupLogic.CreateArchiveJson(Assembly.GetAssembly(typeof(GoWorkFactoryDataBaseContext)), userId);
+            return File(archive, "application/zip");
         }
 
         [HttpGet]
         public IActionResult BackupXml()
         {
-            ClientBackupLogic.BackupXml(Assembly.GetAssembly(typeof(GoWorkFactoryDataBaseContext)), "backups");
-            return Redirect("Index");
+            int userId = int.Parse(User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+            Stream archive = ClientBackupLogic.CreateArchiveXml(Assembly.GetAssembly(typeof(GoWorkFactoryDataBaseContext)), userId);
+            return File(archive, "application/zip");
         }
     }
 }

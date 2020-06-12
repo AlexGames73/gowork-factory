@@ -22,9 +22,10 @@ namespace GoWorkFactoryBusinessLogic.BusinessLogics
             this.productLogic = productLogic;
         }
 
-        public List<IGrouping<int, ReportOrdersProductsViewModel>> GetOrdersProducts(int userId)
+        public List<IGrouping<int, ReportOrdersProductsViewModel>> GetOrdersProducts(int userId, List<int> ids)
         {
             return orderLogic.Read(new OrderBindingModel { UserId = userId })
+                .Where(x => ids.Contains(x.Id))
                 .SelectMany(x => x.Products.Select(y => new ReportOrdersProductsViewModel
                 {
                     OrderId = x.Id,
@@ -51,21 +52,21 @@ namespace GoWorkFactoryBusinessLogic.BusinessLogics
                 .ToList();
         }
 
-        public Stream SaveOrdersProductsToWordFile(int userId)
+        public Stream SaveOrdersProductsToWordFile(int userId, List<int> ids)
         {
             return SaveToWord.CreateDocOrdersProducts(new OrdersProductsWordInfo
             {
                 Title = "Отчет по заказам",
-                OrdersProducts = GetOrdersProducts(userId)
+                OrdersProducts = GetOrdersProducts(userId, ids)
             });
         }
 
-        public Stream SaveOrdersProductsToExcelFile(int userId)
+        public Stream SaveOrdersProductsToExcelFile(int userId, List<int> ids)
         {
             return SaveToExcel.CreateDocOrdersProducts(new OrdersProductsExcelInfo
             {
                 Title = "Отчет по заказам",
-                OrdersProducts = GetOrdersProducts(userId)
+                OrdersProducts = GetOrdersProducts(userId, ids)
             });
         }
 

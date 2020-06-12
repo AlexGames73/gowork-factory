@@ -25,7 +25,6 @@
             <th scope="col">Дата доставки</th>
             <th scope="col">Адрес доставки</th>
             <th scope="col">Сумма заказа</th>
-            <th scope="col">Резервирование</th>
             <th scope="col">Статус заказа</th>
             <th scope="col"></th>
             <th scope="col"></th>
@@ -41,13 +40,12 @@
                     </div>
                 </td>
                 <td>@Model[i].Id.ToString("000000")</td>
-                <td>@Model[i].DeliveryDate</td>
+                <td>@Model[i].DeliveryDate.ToShortDateString()</td>
                 <td>@Model[i].DeliveryAddress</td>
                 <td>@Model[i].Products.Sum(x => x.Count * x.Price)</td>
-                <td>@Model[i].Reverved</td>
                 <td>@Model[i].Status.ToString()</td>
                 <td scope="row"><a class="btn btn-danger" asp-action="DeleteOrder" asp-controller="Home" asp-route-orderId="@Model[i].Id">&times;</a></td>
-                <td scope="row"><a class="btn @if (Model[i].Reverved) {<text>btn-outline-light disabled</text>} else {<text>btn-outline-warning</text>} " asp-action="EditOrder" asp-controller="Home" asp-route-orderId="@Model[i].Id">&hellip;</a></td>
+                <td scope="row"><a class="btn @if (Model[i].Status != GoWorkFactoryBusinessLogic.Enums.OrderStatus.Создан) {<text>btn-outline-light disabled</text>} else {<text>btn-outline-warning</text>} " asp-action="EditOrder" asp-controller="Home" asp-route-orderId="@Model[i].Id">&hellip;</a></td>
             </tr>
         }
     </tbody>
@@ -74,7 +72,7 @@
                 var rows = table.tBodies[0].rows;
                 var res = []
                 for (var i = 0; i < rows.length; i++) {
-                    if (rows[i].getElementsByClassName("select-item")[0].checked && !JSON.parse(rows[i].cells[5].innerText.toLowerCase())) {
+                    if (rows[i].getElementsByClassName("select-item")[0].checked && rows[i].cells[5].innerText == "Создан") {
                         res.push({
                             "OrderId": +(rows[i].cells[1].innerText),
                             "Reserved": true
@@ -91,7 +89,7 @@
                 var rows = table.tBodies[0].rows;
                 var res = []
                 for (var i = 0; i < rows.length; i++) {
-                    if (JSON.parse(rows[i].cells[5].innerText.toLowerCase()) && rows[i].getElementsByClassName("select-item")[0].checked) {
+                    if (rows[i].cells[5].innerText != "Создан" && rows[i].getElementsByClassName("select-item")[0].checked) {
                         res.push({
                             "OrderId": +(rows[i].cells[1].innerText),
                             "Reserved": false
@@ -108,11 +106,11 @@
                 var rows = table.tBodies[0].rows;
                 var res = []
                 for (var i = 0; i < rows.length; i++) {
-                    if (JSON.parse(rows[i].cells[5].innerText.toLowerCase()) && rows[i].getElementsByClassName("select-item")[0].checked) {
+                    if (rows[i].getElementsByClassName("select-item")[0].checked) {
                         res.push(+rows[i].cells[1].innerText);
                     }
                 }
-                $.post("/Home/ExcelReport").done(function () {
+                $.post("/Home/ExcelReport", { "ids": res }).done(function () {
                     location.href = "/";
                 });
             })
@@ -122,11 +120,11 @@
                 var rows = table.tBodies[0].rows;
                 var res = []
                 for (var i = 0; i < rows.length; i++) {
-                    if (JSON.parse(rows[i].cells[5].innerText.toLowerCase()) && rows[i].getElementsByClassName("select-item")[0].checked) {
+                    if (rows[i].getElementsByClassName("select-item")[0].checked) {
                         res.push(+(rows[i].cells[1].innerText));
                     }
                 }
-                $.post("/Home/WordReport").done(function () {
+                $.post("/Home/WordReport", { "ids": res }).done(function () {
                     location.href = "/";
                 });
             })

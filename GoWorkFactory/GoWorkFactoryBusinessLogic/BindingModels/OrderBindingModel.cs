@@ -9,7 +9,6 @@ namespace GoWorkFactoryBusinessLogic.BindingModels
         public int? UserId { get; set; }
         public DateTime DeliveryDate { get; set; }
         public string DeliveryAddress { get; set; }
-        public bool Reserved { get; set; }
         public OrderStatus Status { get; set; }
         public DateTime? DateFrom { get; set; }
         public DateTime? DateTo { get; set; }
