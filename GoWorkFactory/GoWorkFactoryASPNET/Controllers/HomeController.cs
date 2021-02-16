@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using System.Net.Mime;
 using System.Reflection;
 using GoWorkFactoryBusinessLogic.BindingModels;
 using GoWorkFactoryBusinessLogic.BusinessLogics;

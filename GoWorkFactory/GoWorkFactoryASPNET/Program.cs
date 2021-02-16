@@ -1,8 +1,5 @@
-using GoWorkFactoryBusinessLogic.BusinessLogics;
-using GoWorkFactoryDataBase.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using System.Reflection;
 
 namespace GoWorkFactoryASPNET
 {
